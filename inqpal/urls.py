@@ -3,6 +3,7 @@ from inqpal import views
 
 app_name = 'inqpal'
 
+#Test
 urlpatterns = [
     path('', views.index, name='index'),
     path('posts/trending/', views.trending, name='trending'),
