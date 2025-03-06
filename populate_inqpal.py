@@ -10,7 +10,7 @@ def populate():
 
     # To make: 
     #   - Try creating and querying roars
-    
+
     added_accounts = []
 
     accounts = [
@@ -20,21 +20,24 @@ def populate():
          'first_name':'Harvey',
          'last_name':'MacHarvey',
          'fav_dino':'Archaeopteryx',
-         'picture':None},
-         {'username':'DinoFLAME',
+         'picture':None
+         },
+        {'username':'DinoFLAME',
          'password':'coolK!d',
          'email':'Aoife@Campbell.com',
          'first_name':'Aoife',
          'last_name':'Campbell',
          'fav_dino':'Triceratops',
-         'picture':None},
-         {'username':'ROR',
+         'picture':None
+         },
+        {'username':'ROR',
          'password':'RoarOmegaRoar',
          'email':'monster@university.com',
          'first_name':'Richard',
          'last_name':'White',
          'fav_dino':'Spinosaurus',
-         'picture':None}
+         'picture':None
+         }
     ]
 
     # add accounts
