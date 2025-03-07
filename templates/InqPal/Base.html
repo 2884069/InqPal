@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 
 <html>
+    <title>
+        InqPal 
+    </title>
     <head>
-        <title>
-            InqPal <a href="{% url 'inqpal:trending' %}">Trending</a> <a href="{% url 'inqpal:palsposts' %}">Pals</a> <a href="{% url 'inqpal:my_account' %}">Account</a> <a href="{% url 'inqpal:categories' %}">Categories</a>
-        </title>
+        <div>
+            <h1>
+                InqPal <a href="{% url 'inqpal:trending' %}">Trending</a> <a href="{% url 'inqpal:palsposts' %}">Pals</a> <a href="{% url 'inqpal:my_account' %}">Account</a> <a href="{% url 'inqpal:categories' %}">Categories</a>
+            </h1>
+        </div>
     </head>
-
     <body>
         {% block body_block %}
         Error no page content
