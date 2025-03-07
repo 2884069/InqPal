@@ -29,4 +29,4 @@ class Comment(models.Model):
     text = models.CharField(max_length=COMMENT_MAX_LEN)
 
     def __str__(self):
-        return self.post.__str__ + "-" + self.id
+        return self.post.__str__ + "-" + self.id + f"({self.creator.__str__})"
