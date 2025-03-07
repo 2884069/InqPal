@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from rango.models import Account
+from inqpal.models import Account
 
 
 def index(request):
