@@ -2,7 +2,7 @@ from django.shortcuts import render
 
 
 def index(request):
-    pass
+    return render(request, 'inqpal/base.html')
 
 def trending(request):
     pass
