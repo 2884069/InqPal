@@ -1,3 +1,35 @@
 from django.shortcuts import render
 
-# Create your views here.
+
+def index(request):
+    pass
+
+def trending(request):
+    pass
+
+def palsposts(request):
+    pass
+
+def categories(request):
+    pass
+
+def show_category(request):
+    pass
+
+def signup(request):
+    pass
+
+def login(request):
+    pass
+
+def my_account(request):
+    pass
+
+def make_post(request):
+    pass
+
+def edit_profile(request):
+    pass
+
+def add_pal(request):
+    pass
