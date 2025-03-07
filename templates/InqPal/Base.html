@@ -1,16 +1,76 @@
 <!DOCTYPE html>
 
 <html>
-    
+    <title>
+        InqPal
+    </title>
     <head>
-        <title>
-            InqPal <a href="{% url 'inqpal:trending' %}">Trending</a> <a href="{% url 'inqpal:palsposts' %}">Pals</a> <a href="{% url 'inqpal:my_account' %}">Account</a> <a href="{% url 'inqpal:categories' %}">Categories</a>
-        </title>
+        <style>
+            .header {
+                background-color: #FEF5E7;
+                overflow: hidden;
+                padding: 0px 20px;
+            }
+
+            .header_name {
+                float: left;
+                position: relative;
+            }
+
+            .header_name h1{
+                float: left;
+            }
+
+            .header_name p{
+                text-wrap-mode: nowrap;
+                padding-top: 20px;
+                padding-left: 100px;
+            }
+
+            .header_links {
+                padding: 30px;
+                float: right;
+            }
+
+            .header_links a {
+                line-height: 25px;
+                font-size: 25px;
+                text-align: center;
+                padding: 12px;
+                color: black;
+                border-radius: 10px;
+                text-decoration: none;
+            }
+
+            .header_links a:active {
+                color: #C73030;
+            }
+
+            .header_links a:hover {
+                background-color: #114B5F;
+                color: #FEF5E7;
+            }
+        </style>
     </head>
+    <div class = 'header'>
+        <div class = 'header_name' >
+            <h1>InqPal</h1>
+            <p>an inquisition of paleontologists</p>
+        </div>
+
+        <div class = 'header_links'>
+            <a href="{% url 'inqpal:trending' %}">Trending</a>
+            <a href="{% url 'inqpal:palsposts' %}">Pals</a>
+            <a href="{% url 'inqpal:my_account' %}">Account</a>
+            <a href="{% url 'inqpal:categories' %}">Categories</a>
+        </div>
+    </div>
 
     <body>
-        {% block body_block %}
-        Error no page content
-        {% endblock %}
+        <div>
+            {% block body_block %}
+            Error no page content
+            {% endblock %}
+        </div>
     </body>
 </html>
