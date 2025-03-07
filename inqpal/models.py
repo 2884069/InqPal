@@ -16,7 +16,7 @@ class Post(models.Model):
     text = models.CharField(max_length=POST_MAX_LEN)
     image = models.ImageField(upload_to='post_images', blank=True)
     category = models.CharField(max_length=50)
-    roars = models.ManyToManyField(Account)
+    roars = models.ManyToManyField(Account,related_name='roared_posts')
 
     def __str__(self):
         return self.creator.__str__ + ":" + self.id
