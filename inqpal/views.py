@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from inqpal.models import Account
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
+from django.urls import reverse
+from django.shortcuts import redirect
 
 
 def index(request):
@@ -48,8 +52,26 @@ def signup(request):
 
     return render(request, 'inqpal/register.html', context = {'user_form': user_form, 'account_form': account_form, 'registered': registred})
 
-def login(request):
-    pass
+def user_login(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username=username, password=password)
+
+        if user:
+            if user.is_active:
+                login(request, user)
+                return redirect(reverse('rango:index'))
+            else:
+                return HttpResponse("Your InqPal account is disabled.")
+        else:
+            print(f"Invalid login details: {username}, {password}")
+            return HttpResponse("Invalid login details supplied.")
+    
+    else:
+        return render(request, 'inqpal/login.html')
+
 
 def my_account(request):
     pass
