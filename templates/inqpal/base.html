@@ -10,13 +10,13 @@
         <script src="{% static 'js/base.js' %}"></script>
         <script src="{% static 'js/make_post.js' %}"></script>
     </head>
-    <div class = 'header'>
-        <div class = 'header_name' >
+    <div id = 'header'>
+        <div id = 'header_name' >
             <h1>InqPal</h1>
             <p>an inquisition of paleontologists</p>
         </div>
 
-        <div class = 'header_links'>
+        <div id = 'header_links'>
             <a href="{% url 'inqpal:trending' %}">Trending</a>
             {% if user.is_authenticated %}
             <a href="{% url 'inqpal:palsposts' %}">Pals</a>
