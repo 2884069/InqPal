@@ -6,7 +6,9 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
-
+from django import forms
+from inqpal.forms import UserForm
+from inqpal.forms import AccountForm
 
 
 def index(request):
@@ -26,14 +28,14 @@ def show_category(request):
     pass
 
 def signup(request):
-    register = False
+    registered = False
 
     if request.method == "POST":
         user_form = UserForm(request.POST)
         account_form = AccountForm(request.POST)
 
         if user_form.is_valid() and account_form.is_valid():
-            user = user_form.save()
+            user = user_form.save(commit=False)
             user.set_password(user.password)
             user.save()
 
@@ -44,7 +46,7 @@ def signup(request):
                 account.picture = request.FILES['picture']
             
             account.save()
-            registred = True
+            registered = True
         
         else:
             print(user_form.errors, account_form.errors)
@@ -53,7 +55,7 @@ def signup(request):
         user_form = UserForm()
         account_form = AccountForm()
 
-    return render(request, 'inqpal/register.html', context = {'user_form': user_form, 'account_form': account_form, 'registered': registred})
+    return render(request, 'inqpal/register.html', context = {'user_form': user_form, 'account_form': account_form, 'registered': registered})
 
 def user_login(request):
     if request.method == 'POST':
@@ -65,7 +67,7 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return redirect(reverse('rango:index'))
+                return redirect(reverse('inqpal:index'))
             else:
                 return HttpResponse("Your InqPal account is disabled.")
         else:
@@ -77,7 +79,7 @@ def user_login(request):
 
 
 def my_account(request):
-    pass
+    return render(request, 'inqpal/account.html', context = {})
 
 @login_required
 def make_post(request):

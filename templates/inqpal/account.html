@@ -1,0 +1,9 @@
+{% extends 'inqpal/base.html' %}
+{% load staticfiles %}
+
+{% block body_block %}
+<a href="{% url 'inqpal:trending' %}">Trending</a>
+<a href="{% url 'inqpal:palsposts' %}">Pals</a>
+<a href="{% url 'inqpal:login' %}">Login</a>
+<a href="{% url 'inqpal:signup' %}">Signup</a>
+{% endblock %}
