@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from inqpal import models
 from inqpal.models import Account
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
@@ -7,8 +8,7 @@ from django.urls import reverse
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django import forms
-from inqpal.forms import UserForm
-from inqpal.forms import AccountForm
+from inqpal.forms import PostForm, UserForm, AccountForm
 
 
 def index(request):
@@ -83,7 +83,24 @@ def my_account(request):
 
 @login_required
 def make_post(request):
-    pass
+
+    if request.method == 'POST':
+        post_form = PostForm(request.POST)
+
+        if post_form.is_valid:
+            post = post_form.save(commit = False)
+            post.image = request.FILES['image']
+            post.creator = request.user.account
+            post.save()
+
+        else:
+            print(post_form.errors)
+    
+    else:
+        post_form = PostForm()
+    
+    return render(request, 'inqpal/make_post.html', context= {'post_form' : post_form})
+
 
 @login_required
 def edit_profile(request):

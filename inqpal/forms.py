@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from inqpal.models import Account
+from inqpal.models import Account, Post
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
@@ -17,3 +17,9 @@ class AccountForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = ('fav_dino', 'picture')
+
+
+class PostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ('text', 'image', 'category')
