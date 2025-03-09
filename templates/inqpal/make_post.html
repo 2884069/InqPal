@@ -14,8 +14,15 @@
     {% csrf_token %}
     
     <input type="file" name = 'image' id = 'picture_input'  accept="image/*" required="required"/>
-    <input type="text" name = 'text' id = 'text' placeholder = "Enter your description" required="required"/>
-    <input type="checkbox" name = 'category' id = 'category' required="required"/>
+    <input type="text" name = 'text' id = 'text_input' placeholder = "Enter your description" required="required"/>
+    <select name = 'category' id = 'category_input'>
+        <option value="theropods">Theropods</option>
+        <option value="sauropods">Sauropods</option>
+        <option value="ornithischians">ornithischians</option>
+        <option value="non-dinosaur_archosaurs">Non-dinosaur Archosaurs</option>
+        <option value="other_prehistoric_reptiles">other prehistoric reptiles</option>
+        <option value="birds">Birds</option>
+    </select>
     <input type="submit" name = "submit" value = "post" required="required"/>
 </form>
 <img id = 'picture_preview' src = "{% static 'images/noImageSelected.png' %}"/>
