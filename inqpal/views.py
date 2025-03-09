@@ -5,10 +5,12 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.urls import reverse
 from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+
 
 
 def index(request):
-    return render(request, 'inqpal/base.html')
+    return render(request, 'inqpal/base.html', context = {})
 
 def trending(request):
     pass
@@ -76,11 +78,13 @@ def user_login(request):
 def my_account(request):
     pass
 
+@login_required
 def make_post(request):
     pass
 
 def edit_profile(request):
     pass
 
+@login_required
 def add_pal(request):
     pass
