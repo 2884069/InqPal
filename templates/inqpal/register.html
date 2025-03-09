@@ -5,7 +5,7 @@
     <h1>Sign up for InqPal</h1>
 {% if registered %}
 <strong>Thank you for signing up!</strong>
-<a href="{% url 'inqpal:base' %}">Return to the trending page.</a><br />
+<a href="{% url 'inqpal:index' %}">Return to the trending page.</a><br />
 {% else %}
 <strong>Sign up here</strong><br \>
 <form id="user_form" method="post" action="{% url 'inqpal:register' %}" enctype="multipart/form-data">
