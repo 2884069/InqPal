@@ -1,13 +1,7 @@
 {% extends 'inqpal/base.html'%}
 {% load staticfiles %}
 
-<head>
-    <script src="{% static 'js/make_post.js' %}"></script>
-</head>
-
 {% block body_block %}
-<head>
-</head>
 <h1>Create a Post</h1>
 <h2>{{ username }}</h2>
 <form id = 'post_form' method="POST" action="{% url 'inqpal:make_post' %}" enctype="multipart/form-data">
@@ -30,4 +24,5 @@
 
 <script>var placeholderImage = "{% static 'images/noImageSelected.png' %}"</script>
 <script src="{% static 'js/make_post.js' %}"></script>
+
 {% endblock %}
