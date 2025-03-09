@@ -1,9 +1,14 @@
-
 #picture_preview {
     float: left;
-}
+    object-fit:contain;
+    width: 500px;
+    height: 500px;
+    max-width: 50%;
+    }
 
 
 #post_form {
     float: left;
 }
+
+
