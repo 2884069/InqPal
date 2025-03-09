@@ -15,6 +15,7 @@ def index(request):
 def trending(request):
     pass
 
+@login_required
 def palsposts(request):
     pass
 
@@ -82,6 +83,7 @@ def my_account(request):
 def make_post(request):
     pass
 
+@login_required
 def edit_profile(request):
     pass
 
