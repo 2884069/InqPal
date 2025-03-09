@@ -99,7 +99,7 @@ def make_post(request):
     else:
         post_form = PostForm()
     
-    return render(request, 'inqpal/make_post.html', context= {'post_form' : post_form})
+    return render(request, 'inqpal/make_post.html', context= {'post_form' : post_form, 'username' : str(request.user.account)})
 
 
 @login_required

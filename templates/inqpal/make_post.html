@@ -1,12 +1,26 @@
 {% extends 'inqpal/base.html'%}
 {% load staticfiles %}
 
+<head>
+    <script src="{% static 'js/make_post.js' %}"></script>
+</head>
+
 {% block body_block %}
-    <h1>Create a Post</h1>
-    <form id = 'post_form' method="POST" action="{% url 'inqpal:make_post' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        
-        {{post_form.as_p}}
-        <input type="submit" name = "submit" value = "post" />
-    </form>
+<head>
+</head>
+<h1>Create a Post</h1>
+<h2>{{ username }}</h2>
+<form id = 'post_form' method="POST" action="{% url 'inqpal:make_post' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    <input type="file" name = 'image' id = 'picture_input'  accept="image/*" required="required"/>
+    <input type="text" name = 'text' id = 'text' placeholder = "Enter your description" required="required"/>
+    <input type="checkbox" name = 'category' id = 'category' required="required"/>
+    <input type="submit" name = "submit" value = "post" required="required"/>
+</form>
+<img id = 'picture_preview' src = "{% static 'images/noImageSelected.png' %}"/>
+
+
+<script>var placeholderImage = "{% static 'images/noImageSelected.png' %}"</script>
+<script src="{% static 'js/make_post.js' %}"></script>
 {% endblock %}
