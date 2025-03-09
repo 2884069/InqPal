@@ -34,7 +34,7 @@
     text-decoration: none;
 }
 
-.header_links a:active {
+.header_links a.active {
     color: #C73030;
 }
 
