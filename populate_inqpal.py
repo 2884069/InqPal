@@ -43,7 +43,7 @@ def populate():
     # add accounts
     for account in accounts:
         a = add_account(account['username'],account['password'],account['email'],account['first_name'],account['last_name'],account['fav_dino'],account['picture'])
-        print("Account added: " + a)
+        print("Account added: " + a.__str__())
         added_accounts.append(a)
 
 
@@ -71,9 +71,9 @@ def populate():
 
     # print out added posts
     for p in Post.objects.all():
-        print(f'Post ' + p + ":")
+        print(f'Post ' + p.__str__() + ":")
         for c in Comment.objects.filter(post=p):
-            print(f'- {c}')
+            print(f'- {c.__str__()}')
 
 def add_comment(post,creator,text):
     p = Comment.objects.get_or_create(post=post,creator=creator,text=text)[0]

@@ -19,7 +19,7 @@ class Post(models.Model):
     roars = models.ManyToManyField(Account,related_name='roared_posts')
 
     def __str__(self):
-        return self.creator.__str__ + ":" + self.id
+        return self.creator.__str__() + ":" + str(self.id)
 
 class Comment(models.Model):
     COMMENT_MAX_LEN = 500
@@ -29,4 +29,4 @@ class Comment(models.Model):
     text = models.CharField(max_length=COMMENT_MAX_LEN)
 
     def __str__(self):
-        return self.post.__str__ + "-" + self.id + f"({self.creator.__str__})"
+        return self.post.__str__() + "-" + str(self.id) + f"({self.creator.__str__()})"
