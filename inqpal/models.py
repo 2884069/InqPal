@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
+    friends = models.ManyToManyField('self',related_name='watchers',symmetrical=False,blank=True)
     fav_dino = models.CharField(max_length=50)
     picture = models.ImageField(upload_to='profile_images', blank=True)
     def __str__(self):
@@ -16,7 +17,7 @@ class Post(models.Model):
     text = models.CharField(max_length=POST_MAX_LEN)
     image = models.ImageField(upload_to='post_images', blank=True)
     category = models.CharField(max_length=50)
-    roars = models.ManyToManyField(Account,related_name='roared_posts')
+    roars = models.ManyToManyField(Account,related_name='roared_posts',blank=True)
 
     def __str__(self):
         return self.creator.__str__() + ":" + str(self.id)

@@ -41,8 +41,9 @@ def populate():
     ]
 
     # add accounts
+    a = None
     for account in accounts:
-        a = add_account(account['username'],account['password'],account['email'],account['first_name'],account['last_name'],account['fav_dino'],account['picture'])
+        a = add_account(account['username'],account['password'],account['email'],account['first_name'],account['last_name'],account['fav_dino'],account['picture'],a)
         print("Account added: " + a.__str__())
         added_accounts.append(a)
 
@@ -85,10 +86,12 @@ def add_post(creator,text,category,image=None):
     c.save()
     return c
 
-def add_account(username,password,email,first_name,last_name,fav_dino,picture):
+def add_account(username,password,email,first_name,last_name,fav_dino,picture,friend):
     u = User.objects.get_or_create(username=username,password=password,email=email,first_name=first_name,last_name=last_name)[0]
     u.save()
     a = Account.objects.get_or_create(user=u,fav_dino=fav_dino,picture=picture)[0]
+    if friend != None:
+        a.friends.add(friend)
     a.save()
     return a
     
