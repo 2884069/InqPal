@@ -1,6 +1,10 @@
 {% extends 'inqpal/base.html'%}
 {% load staticfiles %}
 
+{%block head_block %}
+<link rel = "stylesheet" href="{% static 'ccs/make_post.css' %}" />
+{% endblock %}
+
 {% block body_block %}
 <h1>Create a Post</h1>
 <h2>{{ username }}</h2>
