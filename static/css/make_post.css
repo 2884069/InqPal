@@ -1,14 +1,13 @@
 #picture {
     float: left;
-    max-width: 50%;
+    width: 60vmin;
     position: relative;
 }
 
 
 #picture_preview {
     object-fit:contain;
-    width: 500px;
-    max-width: 100%;
+    width: inherit; 
     aspect-ratio: 1/1;
     background-color: azure;
 }
@@ -17,9 +16,10 @@
 
 #right_form {
     float: left;
-    padding-inline: 5%;
+    padding-left: 5vw;
     position: relative;
-    width: 40%;
+    width: 35vw;
+    height: 60vh;
 }
 
 #category_input {
@@ -34,7 +34,7 @@
 #text_input {
     resize: both;
     width: 100%;
-    aspect-ratio: 2/1.211;
+    height: 80%;
     background-color: #FEF5E7;
     border: none;
     font-size:x-large;
@@ -48,12 +48,16 @@
     resize: both;
     padding: 10px;
     border: none;
-    color: white;
+    color: #FEF5E7;
     border-radius: 10px;
     text-decoration: none;
     display: inline-flex;
     justify-content: center;
     align-items: center;
+}
+
+#bottom_form *:hover {
+    background-color: #114B5F;
 }
 
 #cancel_botton {
