@@ -1,14 +1,34 @@
-#picture_preview {
+#picture {
     float: left;
-    object-fit:contain;
-    width: 500px;
-    height: 500px;
     max-width: 50%;
-    }
-
-
-#post_form {
-    float: left;
+    position: relative;
 }
 
 
+#picture_preview {
+    object-fit:contain;
+    width: 500px;
+    height: 500px;
+    max-width: 100%;
+    background-color: azure;
+    }
+
+
+#right_form {
+    float: left;
+    padding-inline: 5%;
+    position: relative;
+    width: 40%;
+}
+
+#category_input {
+    float: right;
+    width: 50%;
+    height: 10%;
+    font-size: large;
+}
+
+#text_input {
+    width: 100%;
+    height: 100%;
+}

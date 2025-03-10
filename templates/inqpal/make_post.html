@@ -8,21 +8,32 @@
 {% block body_block %}
 <h1>Create a Post</h1>
 <h2>{{ username }}</h2>
-<img id = 'picture_preview' src = "{% static 'images/noImageSelected.png' %}"/>
 <form id = 'post_form' method="POST" action="{% url 'inqpal:make_post' %}" enctype="multipart/form-data">
     {% csrf_token %}
+    <div id = 'picture'>
+        <img id = 'picture_preview' src = "{% static 'images/noImageSelected.png' %}"/>
+        <br/>
+        <input type="file" name = 'image' id = 'picture_input'  accept="image/*" required="required"/>
+    </div>
+
+    <div id = 'right_form'>
+        <select name = 'category' id = 'category_input' required="required">
+            <option value="theropods">Theropods</option>
+            <option value="sauropods">Sauropods</option>
+            <option value="ornithischians">ornithischians</option>
+            <option value="non-dinosaur_archosaurs">Non-dinosaur Archosaurs</option>
+            <option value="other_prehistoric_reptiles">other prehistoric reptiles</option>
+            <option value="birds">Birds</option>
+        </select>
+        <br/>
+        <textarea type="text" name = 'text' id = 'text_input' rows="31" placeholder = "Enter your description" required="required"></textarea>
+
+        <div id = 'bottom_form'>
+            <a href= "{% url 'inqpal:my_account' %}">cancel</a>
+            <input type="submit" name = "submit" value = "post" required="required"/>
+        </div>
+    </div>
     
-    <input type="file" name = 'image' id = 'picture_input'  accept="image/*" required="required"/>
-    <input type="text" name = 'text' id = 'text_input' placeholder = "Enter your description" required="required"/>
-    <select name = 'category' id = 'category_input' required="required">
-        <option value="theropods">Theropods</option>
-        <option value="sauropods">Sauropods</option>
-        <option value="ornithischians">ornithischians</option>
-        <option value="non-dinosaur_archosaurs">Non-dinosaur Archosaurs</option>
-        <option value="other_prehistoric_reptiles">other prehistoric reptiles</option>
-        <option value="birds">Birds</option>
-    </select>
-    <input type="submit" name = "submit" value = "post" required="required"/>
 </form>
 
 
