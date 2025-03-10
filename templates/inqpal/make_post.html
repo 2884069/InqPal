@@ -27,7 +27,7 @@
             <option value="birds">Birds</option>
         </select>
         <br/>
-        <textarea type="text" name = 'text' id = 'text_input' rows="31" placeholder = "Enter your description" required="required"></textarea>
+        <textarea type="text" name = 'text' id = 'text_input' rows="31" maxlength="2000" placeholder = "Enter your description" required="required"></textarea>
 
         <div id = 'bottom_form'>
             <a href= "{% url 'inqpal:my_account' %}" id = 'cancel_botton'>cancel</a>
