@@ -8,10 +8,11 @@
 #picture_preview {
     object-fit:contain;
     width: 500px;
-    height: 500px;
     max-width: 100%;
+    aspect-ratio: 1/1;
     background-color: azure;
-    }
+}
+
 
 
 #right_form {
@@ -24,11 +25,45 @@
 #category_input {
     float: right;
     width: 50%;
-    height: 10%;
-    font-size: large;
+    min-width: 225px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-size:x-large;
 }
 
 #text_input {
+    resize: both;
     width: 100%;
-    height: 100%;
+    aspect-ratio: 2/1.211;
+    background-color: #FEF5E7;
+    border: none;
+    font-size:x-large;
+}
+
+#bottom_form *{
+    font-family:Arial;
+    font-style: normal;
+    font-size: 20px;
+    line-height: 21px;
+    resize: both;
+    padding: 10px;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#cancel_botton {
+    float: left;
+    margin-left: 10%;
+    background-color: #A71D31;
+}
+
+#post_button {
+    float: right;
+    margin-right: 10%;
+    background-color: #4E8E35;
 }

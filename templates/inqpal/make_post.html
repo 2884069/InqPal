@@ -18,6 +18,7 @@
 
     <div id = 'right_form'>
         <select name = 'category' id = 'category_input' required="required">
+            <option hidden disabled selected value>Select a Category</option>
             <option value="theropods">Theropods</option>
             <option value="sauropods">Sauropods</option>
             <option value="ornithischians">ornithischians</option>
@@ -29,8 +30,8 @@
         <textarea type="text" name = 'text' id = 'text_input' rows="31" placeholder = "Enter your description" required="required"></textarea>
 
         <div id = 'bottom_form'>
-            <a href= "{% url 'inqpal:my_account' %}">cancel</a>
-            <input type="submit" name = "submit" value = "post" required="required"/>
+            <a href= "{% url 'inqpal:my_account' %}" id = 'cancel_botton'>cancel</a>
+            <input type="submit" name = "submit" value = "post" required="required" id = 'post_button'/>
         </div>
     </div>
     
