@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from inqpal.models import Account, Post
 
 class UserForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput())
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form'}))
     #confirm_password = forms.CharField(widget=forms.PasswordInput())
 
         # if password != confirm_password:
@@ -12,6 +12,11 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password')
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form'}),
+            'email': forms.EmailInput(attrs={'class': 'form'}),
+            'password': forms.PasswordInput(attrs={'class': 'form'}),
+        }
 
 class AccountForm(forms.ModelForm):
     class Meta:

@@ -1,14 +1,24 @@
 {% extends 'inqpal/base.html' %}
 {% load staticfiles %}
 
+{% block head_block %}
+    <link rel = "stylesheet" href="{% static 'css/signup.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+{% endblock %}
+
 {% block body_block %}
-<h1>Login to InqPal Account</h1>
+<h1 class="heading">Login to InqPal Account</h1>
 <form id="login_form" method="post" action="{% url 'inqpal:login' %}">
     {% csrf_token %}
-    Username: <input type="text" name="username" value="" size="50" />
+    Username <input type="text" name="username" value="" size="50" />
     <br />
-    Password: <input type="password" name="password" value="" size="50" />
+    Password <input type="password" name="password" value="" size="50" />
     <br />
-    <input type="submit" value="submit" />
+    <input id="btnLogin" submit" value="submit" />
+    <div class="hasAccount">
+        <p>Don't have an account? <a id="linkToLogin" href="{% url 'inqpal:register' %}">Signup</a></p>
+    </div>
 </form>
 {% endblock %}

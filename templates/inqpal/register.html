@@ -1,19 +1,43 @@
 {% extends 'inqpal/base.html'%}
 {% load staticfiles %}
 
+{% block head_block %}
+    <link rel = "stylesheet" href="{% static 'css/signup.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+{% endblock %}
+
 {% block body_block %}
+<div class="heading">
     <h1>Sign up for InqPal</h1>
+</div>
 {% if registered %}
 <strong>Thank you for signing up!</strong>
 <a href="{% url 'inqpal:index' %}">Return to the trending page.</a><br />
 {% else %}
-<strong>Sign up here</strong><br \>
 <form id="user_form" method="post" action="{% url 'inqpal:register' %}" enctype="multipart/form-data">
     {% csrf_token %}
 
-    {{ user_form.as_p }}
-    {{ account_form.as_p }}
-    <input type="submit" name="submit" value="Sign up" />
+    <div class="formPart">
+        <label for="{{ user_form.username.id_for_label }}">Username</label>
+        {{ user_form.username }}
+    </div>
+
+    <div class="formPart">
+        <label for="{{ user_form.email.id_for_label }}">Email</label>
+        {{ user_form.email }}
+    </div>
+
+    <div class="formPart">
+        <label for="{{ user_form.password.id_for_label }}">Password</label>
+        {{ user_form.password }}
+    </div>
+
+    <input id="btnSignup" type="submit" name="submit"  value="Sign up" />
+    <div class="hasAccount">
+        <p>Already have an account? <a id="linkToLogin" href="{% url 'inqpal:login' %}">Login</a></p>
+    </div>
 </form>
 {% endif %}
 {% endblock %}
