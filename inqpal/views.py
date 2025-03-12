@@ -99,7 +99,7 @@ def make_post(request):
     else:
         post_form = PostForm()
     
-    return render(request, 'inqpal/make_post.html', context= {'post_form' : post_form, 'username' : str(request.user.account)})
+    return render(request, 'inqpal/make_post.html', context= {'username' : str(request.user.account)})
 
 
 @login_required
@@ -108,4 +108,12 @@ def edit_profile(request):
 
 #@login_required
 def add_pal(request):
+    accounts = []
+    def name_contains(account):
+        return str(account) == search_name
+    
+    if 'search' in request.GET:
+        search_name = request.GET['search']
+        accounts = filter(name_contains, Account.objects.all())
+        return render(request, 'inqpal/add_pal.html', context= {'accounts' : accounts})
     return render(request, 'inqpal/add_pal.html')
