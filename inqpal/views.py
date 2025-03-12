@@ -106,6 +106,6 @@ def make_post(request):
 def edit_profile(request):
     pass
 
-@login_required
+#@login_required
 def add_pal(request):
-    render(request, 'inqpal/add_pal.html')
+    return render(request, 'inqpal/add_pal.html')
