@@ -108,4 +108,4 @@ def edit_profile(request):
 
 @login_required
 def add_pal(request):
-    pass
+    render(request, 'inqpal/add_pal.html')
