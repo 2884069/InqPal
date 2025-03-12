@@ -2,7 +2,7 @@
     background-color: #FFFFFF;
     overflow: hidden;
     padding: 0px 20px;
-    font-family: "Poppins";
+    font-family: "Poppins", sans-serif;
 }
 
 #header_name {
