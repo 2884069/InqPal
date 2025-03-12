@@ -106,6 +106,7 @@ def make_post(request):
 def edit_profile(request):
     pass
 
+#removed for testing purposes
 #@login_required
 def add_pal(request):
     accounts = []
