@@ -1,0 +1,16 @@
+{% extends 'inqpal/base.html'%}
+{% load staticfiles %}
+
+{% block head_block %}
+
+{% endblock %}
+
+{% block body_block %}
+<form id="search_box" method="GET" action="" >
+    <input id="search_box_input" type="search" name="search"> 
+    <button id="search_box_submit" type="submit"> Search </button>
+</form>
+{% for account in accounts %}
+<p>{{account}}</p>
+{% endfor %}
+{% endblock %}

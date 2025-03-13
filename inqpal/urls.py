@@ -3,7 +3,7 @@ from inqpal import views
 
 app_name = 'inqpal'
 
-#Testing the gitignore
+
 urlpatterns = [
     path('', views.index, name='index'),#amber
     path('posts/trending/', views.trending, name='trending'),#nat
