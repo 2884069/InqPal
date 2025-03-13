@@ -1,13 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from inqpal import models
-<<<<<<< Updated upstream
 from inqpal.models import Account,Comment,Post
-from django.contrib.auth import authenticate, login
-=======
-from inqpal.models import Account
 from django.contrib.auth import authenticate, login, logout
->>>>>>> Stashed changes
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse
