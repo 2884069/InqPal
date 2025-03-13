@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from inqpal import models
-from inqpal.models import Account
+from inqpal.models import Account,Comment,Post
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.urls import reverse
@@ -10,12 +10,18 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 from inqpal.forms import PostForm, UserForm, AccountForm
 
+POSTS_PER_PAGE = 10
 
 def index(request):
     return render(request, 'inqpal/base.html', context = {})
 
 def trending(request):
-    pass
+    context_dict = {}
+
+    post_list = Post.objects.order_by('-roars')[:POSTS_PER_PAGE]
+    context_dict['pages'] = post_list
+
+    return render(request, 'inqpal/display_posts.html', context=context_dict)
 
 @login_required
 def palsposts(request):
