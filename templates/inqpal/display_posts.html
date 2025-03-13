@@ -14,7 +14,7 @@
                     <li><strong>{{post.post.creator}}</strong></li>
                     <li>#{{post.post.category}}</li>
                     <li>{{post.post.text}}</li>
-                    <li>roars: {{post.post.roars}}</li>
+                    <li>roars: {{post.roars}}</li>
                     {% if post.comments %}
                         <ul>
                             {% for comment in post.comments %}
@@ -34,4 +34,3 @@
 </div>
 
 {% endblock %}
-

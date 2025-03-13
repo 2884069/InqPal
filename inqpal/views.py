@@ -19,7 +19,7 @@ def trending(request):
     context_dict = {}
 
     post_list = Post.objects.order_by('-roars')[:POSTS_PER_PAGE]
-    post_list = [{'post':p,'comments':Comment.objects.filter(post=p)} for p in post_list]
+    post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p)} for p in post_list]
     context_dict['posts'] = post_list
     # .order_by('date')
 
