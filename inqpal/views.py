@@ -17,6 +17,7 @@ def index(request):
 
 def trending(request):
     context_dict = {}
+    context_dict['type'] = 'Trending'
 
     post_list = Post.objects.order_by('-roars')[:POSTS_PER_PAGE]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
