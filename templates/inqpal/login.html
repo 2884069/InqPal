@@ -16,9 +16,10 @@
     <br />
     Password <input type="password" name="password" value="" size="50" />
     <br />
-    <input id="btnLogin" submit" value="submit" />
+    <input id="btnLogin" type="submit" value="submit" />
     <div class="hasAccount">
         <p>Don't have an account? <a id="linkToLogin" href="{% url 'inqpal:register' %}">Signup</a></p>
+        <a id="linkToLogin" href="{% url 'inqpal:my_account' %}">Account</a>
     </div>
 </form>
 {% endblock %}

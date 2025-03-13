@@ -1,14 +1,20 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from inqpal import models
+<<<<<<< Updated upstream
 from inqpal.models import Account,Comment,Post
 from django.contrib.auth import authenticate, login
+=======
+from inqpal.models import Account
+from django.contrib.auth import authenticate, login, logout
+>>>>>>> Stashed changes
 from django.http import HttpResponse
-from django.urls import reverse
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
 from inqpal.forms import PostForm, UserForm, AccountForm
+from django.contrib import messages
 
 POSTS_PER_PAGE = 10
 
@@ -54,8 +60,13 @@ def signup(request):
             
             account.save()
             registered = True
+            messages.success(request, 'You have successfully registered! You can now log in.')
+
+            login(request, user)
+            return redirect(reverse('inqpal:my_account'))
         
         else:
+            messages.error(request, 'registration failed. Pleasde try again.')
             print(user_form.errors, account_form.errors)
         
     else:
@@ -74,19 +85,30 @@ def user_login(request):
         if user:
             if user.is_active:
                 login(request, user)
-                return redirect(reverse('inqpal:index'))
+                messages.success(request, 'Login successful!')
+                return redirect(reverse('inqpal:my_account'))
             else:
                 return HttpResponse("Your InqPal account is disabled.")
         else:
             print(f"Invalid login details: {username}, {password}")
             return HttpResponse("Invalid login details supplied.")
     
-    else:
-        return render(request, 'inqpal/login.html')
+    return render(request, 'inqpal/login.html')
 
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect(reverse('inqpal:index'))
 
 def my_account(request):
-    return render(request, 'inqpal/account.html', context = {})
+    user = request.user
+    account = Account.objects.get(user=user)
+    context = {
+        'account': account,
+        'friends': account.friends_count(),
+        'watchers': account.watchers_count(),
+    }
+    return render(request, 'inqpal/account.html', context)
 
 @login_required
 def make_post(request):
