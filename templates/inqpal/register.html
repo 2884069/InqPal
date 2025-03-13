@@ -34,6 +34,11 @@
         {{ user_form.password }}
     </div>
 
+    <div class="formPart">
+        <label for="{{ user_form.fav_dino.id_for_label }}">Favorite Dinosaur</label>
+        {{ account_form.fav_dino }}
+    </div>
+
     <input id="btnSignup" type="submit" name="submit"  value="Sign up" />
     <div class="hasAccount">
         <p>Already have an account? <a id="linkToLogin" href="{% url 'inqpal:login' %}">Login</a></p>

@@ -19,6 +19,7 @@ class UserForm(forms.ModelForm):
         }
 
 class AccountForm(forms.ModelForm):
+    fav_dino = forms.CharField(widget=forms.TextInput(attrs={'class': 'form'}))
     class Meta:
         model = Account
         fields = ('fav_dino', 'picture')

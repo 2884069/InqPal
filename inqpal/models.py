@@ -7,9 +7,15 @@ class Account(models.Model):
 
     friends = models.ManyToManyField('self',related_name='watchers',symmetrical=False,blank=True)
     fav_dino = models.CharField(max_length=50)
-    picture = models.ImageField(upload_to='profile_images', blank=True)
+    picture = models.ImageField(default="default.jpg", upload_to='profile_images', blank=True)
     def __str__(self):
         return self.user.username
+    
+    def friends_count(self):
+        return self.friends.count()
+    
+    def watchers_count(self):
+        return self.watchers.count()
 
 class Post(models.Model):
     POST_MAX_LEN = 2000
