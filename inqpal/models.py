@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import datetime
 
 class Account(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -18,6 +19,7 @@ class Post(models.Model):
     image = models.ImageField(upload_to='post_images', blank=True)
     category = models.CharField(max_length=50)
     roars = models.ManyToManyField(Account,related_name='roared_posts',blank=True)
+    date = models.DateField(default=datetime.datetime(2025,1,1))
 
     def __str__(self):
         return self.creator.__str__() + ":" + str(self.id)
@@ -28,6 +30,7 @@ class Comment(models.Model):
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     creator = models.ForeignKey(Account, on_delete=models.CASCADE)
     text = models.CharField(max_length=COMMENT_MAX_LEN)
+    date = models.DateTimeField(default=datetime.datetime(2025,1,1))
 
     def __str__(self):
         return self.post.__str__() + "-" + str(self.id) + f"({self.creator.__str__()})"

@@ -5,6 +5,7 @@ import django
 django.setup()
 from inqpal.models import Account,Post,Comment
 from django.contrib.auth.models import User
+import datetime
 
 def populate():
 
@@ -50,25 +51,28 @@ def populate():
 
     post_one_comments = [
         {'creator': added_accounts[1],
-         'text':'old news'},
+         'text':'old news',
+         'date':datetime.datetime(2025,1,23)},
         {'creator': added_accounts[2],
-         'text':'that ROCKS!'}
+         'text':'that ROCKS!',
+         'date':datetime.datetime(2025,2,13)}
     ]
 
     post_two_comments = [{'creator':added_accounts[0],
-                          'text':'definitely Nessie'}
+                          'text':'definitely Nessie',
+                          'date':datetime.datetime(2025,2,23)}
     ]
     
-    posts = [{'creator':added_accounts[0],'text':'I <3 deinonychus','category':'Theropods','comments':post_one_comments},
-             {'creator':added_accounts[2],'text':'Mosasaurus goes hard','category':'Reptiles','comments':post_two_comments},
-             {'creator':added_accounts[1],'text':'crocodile .o.','category':'Archosaurs','comments':[]}
+    posts = [{'creator':added_accounts[0],'text':'I <3 deinonychus','category':'Theropods','comments':post_one_comments,'date':datetime.datetime(2025,1,5)},
+             {'creator':added_accounts[2],'text':'Mosasaurus goes hard','category':'Reptiles','comments':post_two_comments,'date':datetime.datetime(2025,1,7)},
+             {'creator':added_accounts[1],'text':'crocodile .o.','category':'Archosaurs','comments':[],'date':datetime.datetime(2025,3,13)}
     ]
     
     # adds posts, comments from posts
     for post in posts:
-        p = add_post(post['creator'],post['text'],post['category'])
+        p = add_post(post['creator'],post['text'],post['category'],post['date'])
         for comment in post['comments']:
-            add_comment(p, comment['creator'], comment['text'])
+            add_comment(p, comment['creator'], comment['text'],comment['date'])
 
     # print out added posts
     for p in Post.objects.all():
@@ -76,13 +80,13 @@ def populate():
         for c in Comment.objects.filter(post=p):
             print(f'- {c.__str__()}')
 
-def add_comment(post,creator,text):
-    p = Comment.objects.get_or_create(post=post,creator=creator,text=text)[0]
+def add_comment(post,creator,text,date):
+    p = Comment.objects.get_or_create(post=post,creator=creator,text=text,date=date)[0]
     p.save()
     return p
     
-def add_post(creator,text,category,image=None):
-    c = Post.objects.get_or_create(creator=creator,text=text,category=category,image=image)[0]
+def add_post(creator,text,category,date,image=None):
+    c = Post.objects.get_or_create(creator=creator,text=text,category=category,image=image,date=date)[0]
     c.save()
     return c
 
