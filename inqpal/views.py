@@ -33,8 +33,15 @@ def palsposts(request):
 def categories(request):
     pass
 
-def show_category(request):
-    pass
+def show_category(request,category_name):
+    context_dict = {}
+    context_dict['type'] = category_name
+
+    post_list = Post.objects.filter(category=category_name).order_by('-roars')[:POSTS_PER_PAGE]
+    post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
+    context_dict['posts'] = post_list
+
+    return render(request, 'inqpal/display_posts.html', context=context_dict)
 
 def signup(request):
     registered = False
