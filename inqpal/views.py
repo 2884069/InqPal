@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from inqpal import models
 from inqpal.models import Account,Comment,Post
 from django.contrib.auth import authenticate, login, logout
@@ -76,7 +77,7 @@ def signup(request):
             messages.success(request, 'You have successfully registered! You can now log in.')
 
             login(request, user)
-            return redirect(reverse('inqpal:my_account'))
+            return redirect('inqpal:my_account')
         
         else:
             messages.error(request, 'registration failed. Pleasde try again.')
@@ -115,7 +116,11 @@ def user_logout(request):
 
 def my_account(request):
     user = request.user
-    account = Account.objects.get(user=user)
+    try:
+        account = Account.objects.get(user=user)
+    except ObjectDoesNotExist:
+        messages.error(request, "Your account profile does not exist. Please complete your registration.")
+        return redirect(reverse('inqpal:register'))
     context = {
         'account': account,
         'friends': account.friends_count(),

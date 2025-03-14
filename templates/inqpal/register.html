@@ -34,6 +34,12 @@
         {{ user_form.password }}
     </div>
 
+
+    <div class="formPart">
+        <label for="{{ user_form.confirmation_password.id_for_label }}">Confirm Password</label>
+        {{ user_form.confirmation_password }}
+    </div>
+
     <div class="formPart">
         <label for="{{ user_form.fav_dino.id_for_label }}">Favorite Dinosaur</label>
         {{ account_form.fav_dino }}
