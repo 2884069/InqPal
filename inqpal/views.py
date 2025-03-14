@@ -28,7 +28,17 @@ def trending(request):
 
 @login_required
 def palsposts(request):
-    pass
+    user = request.user
+    account = Account.objects.get(user=user)
+
+    context_dict = {}
+    context_dict['type'] = 'Pals Posts'
+
+    post_list = Post.objects.filter(creator__in=account.friends.all()).order_by('-roars')[:POSTS_PER_PAGE]
+    post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
+    context_dict['posts'] = post_list
+
+    return render(request, 'inqpal/display_posts.html', context=context_dict)
 
 def categories(request):
     pass
