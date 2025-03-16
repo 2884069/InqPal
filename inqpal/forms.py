@@ -47,9 +47,7 @@ class PostForm(forms.ModelForm):
         fields = ('text', 'image', 'category')
 
 class CommentForm(forms.ModelForm):
-    text = forms.CharField(max_length=Comment.COMMENT_MAX_LEN,help_text="Comment Here")
-    date = forms.IntegerField(widget=forms.HiddenInput(), initial=datetime.datetime.now())
-
+    text = forms.CharField(widget=forms.TextInput(attrs={"class": "form_field"}))
     class Meta:
         model = Comment
-        fields = ('text','date','post')
+        fields = ('text',)

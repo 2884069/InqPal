@@ -12,21 +12,30 @@ from django import forms
 from inqpal.forms import PostForm, UserForm, AccountForm, CommentForm
 from django.contrib import messages
 
+import datetime
+
 POSTS_PER_PAGE = 10
 
 def index(request):
     return render(request, 'inqpal/base.html', context = {})
 
 def trending(request):
+    context_dict = {}
+    form = CommentForm()
+    context_dict['form'] = form
+
     if request.method == "POST":
         comment_form = CommentForm(request.POST)
-        if comment_form.is_valid:
-            commment = comment_form.save(commit = False)
-            commment.creator = request.user.account
-            commment.save()
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            print(request.POST.get('post'))
+            comment.post = Post.objects.get(id=request.POST.get('post'))
+            comment.creator = request.user.account
+            comment.date = datetime.datetime.now()
+            comment.save()
         else:
             print(comment_form.errors)
-    context_dict = {}
+    
     context_dict['type'] = 'trending'
     context_dict['this_url'] = reverse('inqpal:trending')
     context_dict['logged_in'] = request.user.is_authenticated
@@ -148,7 +157,7 @@ def make_post(request):
     if request.method == 'POST':
         post_form = PostForm(request.POST)
 
-        if post_form.is_valid:
+        if post_form.is_valid():
             post = post_form.save(commit = False)
             post.image = request.FILES['image']
             post.creator = request.user.account
