@@ -16,6 +16,18 @@ import datetime
 
 POSTS_PER_PAGE = 10
 
+def handle_comment_form_post(request):
+    comment_form = CommentForm(request.POST)
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.post = Post.objects.get(id=request.POST.get('post'))
+        comment.creator = request.user.account
+        comment.date = datetime.datetime.now()
+        comment.save()
+    else:
+        print(comment_form.errors)
+    
+
 def index(request):
     return render(request, 'inqpal/base.html', context = {})
 
@@ -26,16 +38,7 @@ def trending(request):
     context_dict['logged_in'] = request.user.is_authenticated
 
     if request.method == "POST":
-        comment_form = CommentForm(request.POST)
-        if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
-            print(request.POST.get('post'))
-            comment.post = Post.objects.get(id=request.POST.get('post'))
-            comment.creator = request.user.account
-            comment.date = datetime.datetime.now()
-            comment.save()
-        else:
-            print(comment_form.errors)
+        handle_comment_form_post(request)
     
     context_dict['type'] = 'Trending'
     context_dict['this_url'] = reverse('inqpal:trending')
@@ -54,16 +57,7 @@ def pals_posts(request):
     context_dict['logged_in'] = True
 
     if request.method == "POST":
-        comment_form = CommentForm(request.POST)
-        if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
-            print(request.POST.get('post'))
-            comment.post = Post.objects.get(id=request.POST.get('post'))
-            comment.creator = request.user.account
-            comment.date = datetime.datetime.now()
-            comment.save()
-        else:
-            print(comment_form.errors)
+        handle_comment_form_post(request)
     
     context_dict['type'] = 'Pals Posts'
     context_dict['this_url'] = reverse('inqpal:palsposts')
@@ -87,16 +81,7 @@ def show_category(request,category_name):
     context_dict['logged_in'] = request.user.is_authenticated
 
     if request.method == "POST":
-        comment_form = CommentForm(request.POST)
-        if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
-            print(request.POST.get('post'))
-            comment.post = Post.objects.get(id=request.POST.get('post'))
-            comment.creator = request.user.account
-            comment.date = datetime.datetime.now()
-            comment.save()
-        else:
-            print(comment_form.errors)
+        handle_comment_form_post(request)
     
     context_dict['type'] = category_name
     context_dict['this_url'] = reverse('inqpal:show_category', kwargs={'category_name':category_name})
