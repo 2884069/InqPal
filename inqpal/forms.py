@@ -47,7 +47,7 @@ class PostForm(forms.ModelForm):
         fields = ('text', 'image', 'category')
 
 class CommentForm(forms.ModelForm):
-    text = forms.CharField(widget=forms.TextInput(attrs={"class": "form_field"}))
+    text = forms.CharField(label='Comment:',widget=forms.TextInput(attrs={"class": "form_field",'rows': 2}))
     class Meta:
         model = Comment
         fields = ('text',)

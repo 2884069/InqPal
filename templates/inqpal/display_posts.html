@@ -40,7 +40,7 @@
                         <form id = 'comment_form' method="POST" action="{{this_url}}" enctype="multipart/form-data">
                             {% csrf_token %}
                             <input type="hidden" name='post' id='what_post' value={{post.post.id}}>
-                            {{ form.as_p }}
+                            {{ form }}
                             <input type="submit" name = "submit" value = "post" required="required" id = 'comment_button'/>
                         </form>
                     {% endif %}
