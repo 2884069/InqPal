@@ -8,7 +8,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
-from inqpal.forms import PostForm, UserForm, AccountForm
+from inqpal.forms import PostForm, UserForm, AccountForm, CommentForm
 from django.contrib import messages
 
 POSTS_PER_PAGE = 10
@@ -17,22 +17,26 @@ def index(request):
     return render(request, 'inqpal/base.html', context = {})
 
 def trending(request):
-    context_dict = {}
-    context_dict['type'] = 'Trending'
+    if request.method == "POST":
+        comment_form = CommentForm(request.POST)
 
-    post_list = Post.objects.order_by('-roars')[:POSTS_PER_PAGE]
-    post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
-    context_dict['posts'] = post_list
+    else:
+        context_dict = {}
+        context_dict['type'] = 'trending'
 
-    return render(request, 'inqpal/display_posts.html', context=context_dict)
+        post_list = Post.objects.order_by('-roars')[:POSTS_PER_PAGE]
+        post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
+        context_dict['posts'] = post_list
+
+        return render(request, 'inqpal/display_posts.html', context=context_dict)
 
 @login_required
-def palsposts(request):
+def pals_posts(request):
     user = request.user
     account = Account.objects.get(user=user)
 
     context_dict = {}
-    context_dict['type'] = 'Pals Posts'
+    context_dict['type'] = 'pals_posts'
 
     post_list = Post.objects.filter(creator__in=account.friends.all()).order_by('-roars')[:POSTS_PER_PAGE]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
@@ -44,14 +48,17 @@ def categories(request):
     pass
 
 def show_category(request,category_name):
-    context_dict = {}
-    context_dict['type'] = category_name
+    if request.method == "POST":
+        pass
+    else:
+        context_dict = {}
+        context_dict['type'] = category_name
 
-    post_list = Post.objects.filter(category=category_name).order_by('-roars')[:POSTS_PER_PAGE]
-    post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
-    context_dict['posts'] = post_list
+        post_list = Post.objects.filter(category=category_name).order_by('-roars')[:POSTS_PER_PAGE]
+        post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
+        context_dict['posts'] = post_list
 
-    return render(request, 'inqpal/display_posts.html', context=context_dict)
+        return render(request, 'inqpal/display_posts.html', context=context_dict)
 
 def signup(request):
     registered = False

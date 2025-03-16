@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
-from inqpal.models import Account, Post
+from inqpal.models import Account, Post,Comment
+import datetime
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form'}))
@@ -29,3 +30,11 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ('text', 'image', 'category')
+
+class CommentForm(forms.ModelForm):
+    text = forms.CharField(max_length=Comment.COMMENT_MAX_LEN,help_text="Comment Here")
+    date = forms.IntegerField(widget=forms.HiddenInput(), initial=datetime.datetime.now())
+
+    class Meta:
+        model = Comment
+        fields = ('text')

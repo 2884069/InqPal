@@ -22,7 +22,7 @@
                         <li>#{{post.post.category}}</li>
                         <li>{{post.post.date}}</li>
                         <li>{{post.post.text}}</li>
-                        <li>🦖 {{post.roars}}</li>
+                        <li><button>🦖</button> {{post.roars}}</li>
                         {% if post.comments %}
                             <ul>
                                 {% for comment in post.comments %}
@@ -33,6 +33,13 @@
                                 {% endfor %}
                             </ul>
                         {% endif %}
+                        <li>
+                            <form id = 'post_form' method="POST" action="{% url type %}" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <textarea type="text" name='text' id='text_input' rows="20" maxlength="2000" placeholder = "Comment Here" required="required"></textarea>
+                                <input type="submit" name = "submit" value = "post" required="required" id = 'comment_button'/>
+                            </form>
+                        </li>type
                 </ul>
                 </div>
             {% endfor %}
