@@ -20,16 +20,23 @@ def index(request):
 def trending(request):
     if request.method == "POST":
         comment_form = CommentForm(request.POST)
+        if comment_form.is_valid:
+            commment = comment_form.save(commit = False)
+            commment.creator = request.user.account
+            commment.save()
+        else:
+            print(comment_form.errors)
+    context_dict = {}
+    context_dict['type'] = 'trending'
+    context_dict['this_url'] = reverse('inqpal:trending')
+    context_dict['logged_in'] = request.user.is_authenticated
 
-    else:
-        context_dict = {}
-        context_dict['type'] = 'trending'
 
-        post_list = Post.objects.order_by('-roars')[:POSTS_PER_PAGE]
-        post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
-        context_dict['posts'] = post_list
+    post_list = Post.objects.order_by('-roars')[:POSTS_PER_PAGE]
+    post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
+    context_dict['posts'] = post_list
 
-        return render(request, 'inqpal/display_posts.html', context=context_dict)
+    return render(request, 'inqpal/display_posts.html', context=context_dict)
 
 @login_required
 def pals_posts(request):
