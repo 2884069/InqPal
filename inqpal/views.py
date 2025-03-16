@@ -26,7 +26,11 @@ def handle_comment_form_post(request):
         comment.save()
     else:
         print(comment_form.errors)
-    
+
+def handle_roar_form_post(request):
+    post = Post.objects.get(id=request.POST.get('post'))
+    post.roars.add(request.user.account)
+    post.save()
 
 def index(request):
     return render(request, 'inqpal/base.html', context = {})
@@ -38,15 +42,25 @@ def trending(request):
     context_dict['logged_in'] = request.user.is_authenticated
 
     if request.method == "POST":
-        handle_comment_form_post(request)
+        if request.POST.get('submit') == 'post':
+            handle_comment_form_post(request)
+        elif request.POST.get('submit') == 'roar':
+            handle_roar_form_post(request)
     
     context_dict['type'] = 'Trending'
     context_dict['this_url'] = reverse('inqpal:trending')
 
     post_list = Post.objects.order_by('-roars')[:POSTS_PER_PAGE]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
-    context_dict['posts'] = post_list
+    
+    # if logged in, checks which posts you've already roared
+    if context_dict['logged_in']:
+        account = request.user.account
+        for p in post_list:
+            if p['post'].roars.filter(id=account.id).exists():
+                p['roared'] = True
 
+    context_dict['posts'] = post_list
     return render(request, 'inqpal/display_posts.html', context=context_dict)
 
 @login_required
@@ -57,7 +71,10 @@ def pals_posts(request):
     context_dict['logged_in'] = True
 
     if request.method == "POST":
-        handle_comment_form_post(request)
+        if request.POST.get('submit') == 'post':
+            handle_comment_form_post(request)
+        elif request.POST.get('submit') == 'roar':
+            handle_roar_form_post(request)
     
     context_dict['type'] = 'Pals Posts'
     context_dict['this_url'] = reverse('inqpal:palsposts')
@@ -67,8 +84,13 @@ def pals_posts(request):
 
     post_list = Post.objects.filter(creator__in=account.friends.all()).order_by('-roars')[:POSTS_PER_PAGE]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
+    
+    # Checks which posts you've already roared
+    for p in post_list:
+        if p['post'].roars.filter(id=account.id).exists():
+            p['roared'] = True
+    
     context_dict['posts'] = post_list
-
     return render(request, 'inqpal/display_posts.html', context=context_dict)
 
 def categories(request):
@@ -81,15 +103,25 @@ def show_category(request,category_name):
     context_dict['logged_in'] = request.user.is_authenticated
 
     if request.method == "POST":
-        handle_comment_form_post(request)
+        if request.POST.get('submit') == 'post':
+            handle_comment_form_post(request)
+        elif request.POST.get('submit') == 'roar':
+            handle_roar_form_post(request)
     
     context_dict['type'] = category_name
     context_dict['this_url'] = reverse('inqpal:show_category', kwargs={'category_name':category_name})
 
     post_list = Post.objects.filter(category=category_name).order_by('-roars')[:POSTS_PER_PAGE]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
+    
+    # if logged in, checks which posts you've already roared
+    if context_dict['logged_in']:
+        account = request.user.account
+        for p in post_list:
+            if p['post'].roars.filter(id=account.id).exists():
+                p['roared'] = True
+    
     context_dict['posts'] = post_list
-
     return render(request, 'inqpal/display_posts.html', context=context_dict)
 
 def signup(request):
