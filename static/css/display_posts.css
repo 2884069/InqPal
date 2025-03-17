@@ -17,8 +17,10 @@
     background-color: #f7e2c1;
     border-radius: 25px;
     padding: 20px;
+    padding-bottom: 30px;
     margin: 10px;
     width: 350px;
+    position: relative;
 }
 
 .fake_image {
@@ -44,7 +46,7 @@
 }
 
 .post_head > .fake_image {
-    background-color: blueviolet;
+    background-color: darkslategray;
     width: 40px;
     height: 40px;
     margin-right: 10px;
@@ -63,8 +65,19 @@
     margin-right: 10px;
 }
 
+.post_text {
+    height: 75px;
+    font-family:'Courier New', Courier, monospace;
+}
+
 .roar_section {
     text-align: right;
     margin-right: 10px;
     margin-bottom: 10px;
+}
+
+#comment_form {
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 15px;
 }
