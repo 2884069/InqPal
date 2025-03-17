@@ -2,6 +2,10 @@
     box-sizing: border-box;
 }
 
+.title_block {
+    text-align: center;
+}
+
 #display_window {
     display: flex;
     flex-wrap: wrap;
