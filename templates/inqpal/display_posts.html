@@ -33,11 +33,11 @@
                             {% if post.roared %}
                                 <p>you roared! {{post.roars}}</p>
                             {% else %}
-                                <form id = 'roar_form' method="POST" action="{{this_url}}">
+                                <p><form id = 'roar_form' method="POST" action="{{this_url}}">
                                     {% csrf_token %}
                                     <input type="hidden" name='post' id='what_post' value={{post.post.id}}>
                                     <input type="submit" name="submit" value="roar" required="required"> {{post.roars}}
-                                </form>
+                                </form></p>
                             {% endif %}
                         {% else %}
                             <p>roars: {{post.roars}}</p>
