@@ -63,8 +63,9 @@ def populate():
                           'date':datetime.datetime(2025,2,23)}
     ]
     
+    post_two_text = "Plesiosaurs are so cool, I'm pretty sure Nessie is one ngl."
     posts = [{'creator':added_accounts[0],'text':'I <3 deinonychus','category':'Theropods','comments':post_one_comments,'date':datetime.datetime(2025,1,5)},
-             {'creator':added_accounts[2],'text':'Mosasaurus goes hard','category':'Reptiles','comments':post_two_comments,'date':datetime.datetime(2025,1,7)},
+             {'creator':added_accounts[2],'text':post_two_text,'category':'Reptiles','comments':post_two_comments,'date':datetime.datetime(2025,1,7)},
              {'creator':added_accounts[1],'text':'crocodile .o.','category':'Archosaurs','comments':[],'date':datetime.datetime(2025,3,13)}
     ]
     
