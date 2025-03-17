@@ -35,7 +35,7 @@ def handle_roar_form_post(request):
 def index(request):
     return render(request, 'inqpal/base.html', context = {})
 
-def trending(request):
+def trending(request,page=0):
     context_dict = {}
     form = CommentForm()
     context_dict['form'] = form
@@ -50,7 +50,7 @@ def trending(request):
     context_dict['type'] = 'Trending'
     context_dict['this_url'] = reverse('inqpal:trending')
 
-    post_list = Post.objects.annotate(num_roars=Count("roars")).order_by("-num_roars")[:POSTS_PER_PAGE]
+    post_list = Post.objects.annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
     
     # if logged in, checks which posts you've already roared
@@ -64,7 +64,7 @@ def trending(request):
     return render(request, 'inqpal/display_posts.html', context=context_dict)
 
 @login_required
-def pals_posts(request):
+def pals_posts(request,page=0):
     context_dict = {}
     form = CommentForm()
     context_dict['form'] = form
@@ -82,7 +82,7 @@ def pals_posts(request):
     user = request.user
     account = Account.objects.get(user=user)
 
-    post_list = Post.objects.filter(creator__in=account.friends.all()).annotate(num_roars=Count("roars")).order_by("-num_roars")[:POSTS_PER_PAGE]
+    post_list = Post.objects.filter(creator__in=account.friends.all()).annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
     
     # Checks which posts you've already roared
@@ -96,7 +96,7 @@ def pals_posts(request):
 def categories(request):
     pass
 
-def show_category(request,category_name):
+def show_category(request,category_name,page=0):
     context_dict = {}
     form = CommentForm()
     context_dict['form'] = form
@@ -111,7 +111,7 @@ def show_category(request,category_name):
     context_dict['type'] = category_name
     context_dict['this_url'] = reverse('inqpal:show_category', kwargs={'category_name':category_name})
 
-    post_list = Post.objects.filter(category=category_name).annotate(num_roars=Count("roars")).order_by("-num_roars")[:POSTS_PER_PAGE]
+    post_list = Post.objects.filter(category=category_name).annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
     
     # if logged in, checks which posts you've already roared
