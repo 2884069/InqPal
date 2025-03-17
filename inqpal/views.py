@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 from inqpal.forms import PostForm, UserForm, AccountForm, CommentForm
 from django.contrib import messages
+from django.db.models import Count
 
 import datetime
 
@@ -49,9 +50,7 @@ def trending(request):
     context_dict['type'] = 'Trending'
     context_dict['this_url'] = reverse('inqpal:trending')
 
-    post_list = list(Post.objects.all())
-    post_list.sort(reverse=True,key=lambda x:x.roars.count())
-    post_list = post_list[:POSTS_PER_PAGE]
+    post_list = Post.objects.annotate(num_roars=Count("roars")).order_by("-num_roars")[:POSTS_PER_PAGE]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
     
     # if logged in, checks which posts you've already roared
@@ -83,9 +82,7 @@ def pals_posts(request):
     user = request.user
     account = Account.objects.get(user=user)
 
-    post_list = list(Post.objects.filter(creator__in=account.friends.all()))
-    post_list.sort(reverse=True,key=lambda x:x.roars.count())
-    post_list = post_list[:POSTS_PER_PAGE]
+    post_list = Post.objects.filter(creator__in=account.friends.all()).annotate(num_roars=Count("roars")).order_by("-num_roars")[:POSTS_PER_PAGE]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
     
     # Checks which posts you've already roared
@@ -114,9 +111,7 @@ def show_category(request,category_name):
     context_dict['type'] = category_name
     context_dict['this_url'] = reverse('inqpal:show_category', kwargs={'category_name':category_name})
 
-    post_list = list(Post.objects.filter(category=category_name))
-    post_list.sort(reverse=True,key=lambda x:x.roars.count())
-    post_list = post_list[:POSTS_PER_PAGE]
+    post_list = Post.objects.filter(category=category_name).annotate(num_roars=Count("roars")).order_by("-num_roars")[:POSTS_PER_PAGE]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
     
     # if logged in, checks which posts you've already roared
