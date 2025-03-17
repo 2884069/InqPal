@@ -30,7 +30,6 @@ def handle_comment_form_post(request):
 def handle_roar_form_post(request):
     post = Post.objects.get(id=request.POST.get('post'))
     post.roars.add(request.user.account)
-    post.save()
 
 def index(request):
     return render(request, 'inqpal/base.html', context = {})
@@ -50,11 +49,13 @@ def trending(request):
     context_dict['type'] = 'Trending'
     context_dict['this_url'] = reverse('inqpal:trending')
 
-    post_list = Post.objects.order_by('-roars')[:POSTS_PER_PAGE]
+    post_list = list(Post.objects.all())
+    post_list.sort(reverse=True,key=lambda x:x.roars.count())
+    post_list = post_list[:POSTS_PER_PAGE]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
     
     # if logged in, checks which posts you've already roared
-    if context_dict['logged_in']:
+    if request.user.is_authenticated:
         account = request.user.account
         for p in post_list:
             if p['post'].roars.filter(id=account.id).exists():
@@ -82,7 +83,9 @@ def pals_posts(request):
     user = request.user
     account = Account.objects.get(user=user)
 
-    post_list = Post.objects.filter(creator__in=account.friends.all()).order_by('-roars')[:POSTS_PER_PAGE]
+    post_list = list(Post.objects.filter(creator__in=account.friends.all()))
+    post_list.sort(reverse=True,key=lambda x:x.roars.count())
+    post_list = post_list[:POSTS_PER_PAGE]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
     
     # Checks which posts you've already roared
@@ -111,7 +114,9 @@ def show_category(request,category_name):
     context_dict['type'] = category_name
     context_dict['this_url'] = reverse('inqpal:show_category', kwargs={'category_name':category_name})
 
-    post_list = Post.objects.filter(category=category_name).order_by('-roars')[:POSTS_PER_PAGE]
+    post_list = list(Post.objects.filter(category=category_name))
+    post_list.sort(reverse=True,key=lambda x:x.roars.count())
+    post_list = post_list[:POSTS_PER_PAGE]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
     
     # if logged in, checks which posts you've already roared

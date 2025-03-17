@@ -2,7 +2,7 @@
 {% load staticfiles %}
 
 {% block head_block %}
-    <link rel = "stylesheet" href="{% static 'css/display_post.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/display_posts.css' %}" />
 {% endblock %}
 
 {% block body_block %}
@@ -10,21 +10,28 @@
         <h1>{{type}}</h1>
     </div>
 
-    <div>
+    <div id="display_window">
         {% if posts %}
             {% for post in posts %}
                 <div class="post_display">
+                    <div class="post_head">
+                        <div class="fake_image"></div>
+                        <h3>{{post.post.creator}}</h3>
+                    </div>
+                    <div class="post_context">
+                        <a href="{% url 'inqpal:categories' %}{{post.post.category}}">#{{post.post.category}}</a>
+                        <p><time>{{post.post.date}}</time></p>
+                    </div>
+                    <div class="fake_image"></div>
                     {% if post.post.image %}
                         <img src="{{post.post.image}}">
                     {% endif %}
-                    <ul>
-                        <li><strong>{{post.post.creator}}</strong></li>
-                        <li>#{{post.post.category}}</li>
-                        <li>{{post.post.date}}</li>
-                        <li>{{post.post.text}}</li>
+                    <p>{{post.post.text}}</p>
+                    
+                    <div class="roar_section">
                         {% if logged_in %}
                             {% if post.roared %}
-                                <li>you roared! {{post.roars}}</li>
+                                <p>you roared! {{post.roars}}</p>
                             {% else %}
                                 <form id = 'roar_form' method="POST" action="{{this_url}}">
                                     {% csrf_token %}
@@ -32,8 +39,11 @@
                                     <input type="submit" name="submit" value="roar" required="required"> {{post.roars}}
                                 </form>
                             {% endif %}
+                        {% else %}
+                            <p>roars: {{post.roars}}</p>
                         {% endif %}
-                    </ul>
+                    </div>
+                    <hr>
                     {% if post.comments %}
                         <ul>
                             {% for comment in post.comments %}
