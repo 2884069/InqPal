@@ -32,6 +32,13 @@
     margin-top: 10px;
 }
 
+.post_image {
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+}
+
 .post_head {
     width:inherit;
     height: 40px;
@@ -47,6 +54,16 @@
 
 .post_head > .fake_image {
     background-color: darkslategray;
+    width: 40px;
+    height: 40px;
+    margin-right: 10px;
+    margin-left: 0;
+    margin-top: 0;
+    float:left;
+    flex-shrink:0;
+}
+
+.profile_pic {
     width: 40px;
     height: 40px;
     margin-right: 10px;

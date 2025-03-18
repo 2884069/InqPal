@@ -15,16 +15,21 @@
             {% for post in posts %}
                 <div class="post_display">
                     <div class="post_head">
-                        <div class="fake_image"></div>
+                        {% if post.post.creator.picture %}
+                            <img class="profile_pic" src="{{post.post.creator.picture}}">
+                        {% else %}
+                            <img class="profile_pic" src="{% static 'images/noImageSelected.png' %}">
+                        {% endif %}
                         <h3>{{post.post.creator}}</h3>
                     </div>
                     <div class="post_context">
                         <a href="{% url 'inqpal:categories' %}{{post.post.category}}">#{{post.post.category}}</a>
                         <p><time>{{post.post.date}}</time></p>
                     </div>
-                    <div class="fake_image"></div>
                     {% if post.post.image %}
-                        <img src="{{post.post.image}}">
+                        <img class="post_image" src="{{post.post.image}}">
+                    {% else %}
+                        <div class="fake_image"></div>
                     {% endif %}
                     <p class="post_text">{{post.post.text}}</p>
                     
