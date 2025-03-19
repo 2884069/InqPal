@@ -184,6 +184,7 @@ def user_logout(request):
     logout(request)
     return redirect(reverse('inqpal:index'))
 
+@login_required
 def my_account(request):
     user = request.user
     try:
