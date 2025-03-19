@@ -205,7 +205,7 @@ def my_account(request):
         'friends': account.friends_count(),
         'watchers': account.watchers_count(),
     }
-    return render(request, 'inqpal/account.html', context)
+    return render(request, 'inqpal/my_account.html', context)
 
 @login_required
 def make_post(request):
