@@ -150,7 +150,7 @@ def signup(request):
             return redirect('inqpal:my_account')
         
         else:
-            messages.error(request, 'registration failed. Pleasde try again.')
+            messages.error(request, 'registration failed. Please try again.')
             print(user_form.errors, account_form.errors)
         
     else:
