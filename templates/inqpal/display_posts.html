@@ -58,6 +58,8 @@
                                 </div></li>
                             {% endfor %}
                         </ul>
+                    {% else %}
+                        <div class="comment_space"></div>
                     {% endif %}
                     {% if logged_in %}
                         <form id = 'comment_form' method="POST" action="{{this_url}}" enctype="multipart/form-data">

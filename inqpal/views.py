@@ -94,7 +94,15 @@ def pals_posts(request,page=0):
     return render(request, 'inqpal/display_posts.html', context=context_dict)
 
 def categories(request):
-    pass
+    context_dict = {}
+    categories = []
+    categories.append({"name":"Theropods",
+                       "text":"",
+                       "image":None,
+                       "posts":Post.objects.filter(category="Theropods").count()})
+
+    context_dict["categories"] = categories
+    return render(request,'inqpal/display_categories.html',context=context_dict)
 
 def show_category(request,category_name,page=0):
     context_dict = {}

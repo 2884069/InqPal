@@ -14,7 +14,7 @@
     /*background-image: ;*/
 }
 
-.post_display {
+.cat_display {
     background-color: #f7e2c1;
     border-radius: 25px;
     padding: 20px;
@@ -33,73 +33,33 @@
     margin-top: 10px;
 }
 
-.post_image {
+.cat_image {
     width: 90%;
     margin-left: auto;
     margin-right: auto;
     margin-top: 10px;
 }
 
-.post_head {
-    width:inherit;
+.cat_head {
+    width:100%;
     height: 40px;
-    margin-bottom: 10px; 
-    display:flex;
+    margin-bottom: 10px;
 }
 
-.post_head > h3 {
+.cat_head > h3 {
+    text-align: center;
     font-size: 27px;
     vertical-align: center;
     margin:0;
 }
 
-.post_head > .fake_image {
-    background-color: darkslategray;
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-    margin-left: 0;
-    margin-top: 0;
-    float:left;
-    flex-shrink:0;
-}
-
-.profile_pic {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
-    margin-left: 0;
-    margin-top: 0;
-    float:left;
-    flex-shrink:0;
-}
-
-.post_context > p {
-    margin: 0;
-}
-
-.post_context > a {
-    float: right;
-    margin-right: 10px;
-}
-
-.post_text {
+.cat_text {
     height: 75px;
     font-family:'Courier New', Courier, monospace;
 }
 
-.roar_section {
+.numbers_section {
     text-align: right;
     margin-right: 10px;
     margin-bottom: 10px;
-}
-
-#comment_form {
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 15px;
-}
-
-.comment_space {
-    height: 20px;
 }
