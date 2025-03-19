@@ -2,5 +2,10 @@
 {% load staticfiles %}
 
 {% block body_block %}
-<h1>Update user</h1>
+<h1>Edit Profile</h1>
+<form method = "POST" enctype = "multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p}}
+    <button type = "submit">Save changes</button>
+</form>
 {% endblock %}

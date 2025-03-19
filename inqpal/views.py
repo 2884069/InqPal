@@ -1,6 +1,6 @@
 from inqpal import models
 from inqpal.models import Account,Comment,Post
-from inqpal.forms import PostForm, UserForm, AccountForm, CommentForm
+from inqpal.forms import PostForm, UserForm, AccountForm, CommentForm, EditProfileForm
 
 from django import forms
 from django.contrib import messages
@@ -221,8 +221,16 @@ def make_post(request):
 
 @login_required
 def edit_profile(request):
-    pass
-
+    if request.method == 'POST':
+        form = EditProfileForm(request.POST, request.FILES, instance = request.user.account)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('inqpal:my_account'))
+    else:
+        form = EditProfileForm(instance = request.user.account)
+    return render(request, 'inqpal/edit_profile.html', context = {'form': form})
+        
+        
 #removed for testing purposes
 #@login_required
 def add_pal(request):

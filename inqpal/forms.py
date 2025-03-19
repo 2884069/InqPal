@@ -51,3 +51,8 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('text',)
+        
+class EditProfileForm(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ('fav_dino', 'picture')

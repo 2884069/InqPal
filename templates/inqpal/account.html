@@ -16,8 +16,8 @@
         {% csrf_token %}
         <button type="submit">Logout</button>
     </form>
-    <button>Edit Profile</button>
-    <button>Add Pal</button>
+    <button onclick = "window.location.href = '{% url 'inqpal:edit_profile' %}'">Edit Profile</button>
+    <button onclick = "window.location.href = '{% url 'inqpal:add_pal' %}'">Add Pal</button>
 </div>
 <div id="posts">
 </div>
