@@ -198,6 +198,7 @@ def my_account(request):
         return redirect(reverse('inqpal:register'))
     context = {
         'account': account,
+        'posts': account.posts_count(),
         'friends': account.friends_count(),
         'watchers': account.watchers_count(),
     }

@@ -16,6 +16,9 @@ class Account(models.Model):
     
     def watchers_count(self):
         return self.watchers.count()
+    
+    def posts_count(self):
+        return self.post_set.count()
 
 class Category(models.Model):
     NAME_MAX_LEN = 50

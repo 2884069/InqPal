@@ -3,22 +3,34 @@
 
 {% block body_block %}
 <div class="mainDiv">
-    <img src="{{ user.account.picture.url }}" alt="">
-    <div>
-        <h2>{{ account.user.username }}</h2>
-        <p>Favorite Dinosaur: {{ account.fav_dino }}</p>
-        <p>Followers: {{ friends }}</p>
-        <p>Following: {{ watchers }}</p>
+    <div class = "imagePart">
+        <img src="{{ user.account.picture.url }}" alt="">
+    </div>
+    <div class = "userPart">
+        <div class = "accountInfo">
+            <h2>{{ account.user.username }}</h2>
+            <p>Favorite Dinosaur: {{ account.fav_dino }}</p>
+        </div>
+        <div class = "socialInfo">
+            <p>Posts: {{ posts }}</p>
+            <p>Watchers: {{ watchers}}</p>
+            <p>Pals: {{ friends }}</p>
+        </div>
+    </div>
+
+    <div id="actionButtons">
+        <div class = "topRightButtons">
+            <button class = "editProfileBtn" onclick = "window.location.href = '{% url 'inqpal:edit_profile' %}'">Edit Profile</button>
+            <form method="POST" action="{% url 'inqpal:logout' %}">
+                {% csrf_token %}
+                <button class = "logOutBtn" type="submit">Logout</button>
+            </form>
+            <button class = "addPalBtn" onclick = "window.location.href = '{% url 'inqpal:add_pal' %}'">Add Pal</button>
+        </div>
     </div>
 </div>
-<div id="actionButtons">
-    <form method="POST" action="{% url 'inqpal:logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-    </form>
-    <button onclick = "window.location.href = '{% url 'inqpal:edit_profile' %}'">Edit Profile</button>
-    <button onclick = "window.location.href = '{% url 'inqpal:add_pal' %}'">Add Pal</button>
-</div>
-<div id="posts">
+<div class "bottomButtons">
+    <button class = "createPostBtn" onclick = "window.location.href = '{% url 'inqpal:make_post' %}'">create a post</button>
+    <button class = "deletePostBtn" onclick = "window.location.href = '{% url 'inqpal:' %}'">delete a post</button>
 </div>
 {% endblock %}
