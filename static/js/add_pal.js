@@ -12,16 +12,48 @@ let ajax_call = function (endpoint, request_parameters) {
 
 user_input.on('keyup', function () {
     const request_parameters = {
-        q: $(this).val()  // value of user_input: the HTML element with ID user-input
+        q: $(this).val()
     };
 
-    // If scheduled_function is NOT false, cancel the execution of the function
     if (scheduled_function) {
         clearTimeout(scheduled_function);
     }
 
-    // Set a timeout to delay the function call by the specified time (debouncing)
+    
     scheduled_function = setTimeout(function() {
-        ajax_call(endpoint, request_parameters); // Pass the correct parameters to ajax_call
+        ajax_call(endpoint, request_parameters);
     }, delay_by_in_ms);
+});
+
+$('.watch-btn').on('click', function () {
+    const button = $(this);
+    const palId = button.data('user-id');
+    const csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+
+    $.ajax({
+        url: endpoint,
+        method: 'POST',
+        data: {
+            'pal_id': palId,
+            'do': button.text().trim(),
+            'csrfmiddlewaretoken': csrfToken
+        },
+
+        success: function (response) {
+            if (response.success) {
+                if (button.text().trim() === 'Watch') {
+                    button.text('Unwatch');
+                } else {
+                    button.text('Watch');
+                }
+            } else {
+                alert('An error occurred while adding pal');
+            }
+        },
+
+        error: function () {
+            alert('An error occurred while processing your request.');
+        }
+    });
+
 });

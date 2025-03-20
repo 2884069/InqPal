@@ -250,14 +250,31 @@ def add_pal(request):
     search_parameter = request.GET.get("q")
 
     if search_parameter:
-        users = Account.objects.filter(user__username__icontains=search_parameter)  # Example search by username
+        users = Account.objects.filter(user__username__icontains=search_parameter)
     else:
         users = Account.objects.all()
     
     ctx["users"] = users
 
-    is_ajax_request = request.headers.get("x-requested-with") == "XMLHttpRequest"
 
+    if request.method == 'POST':
+        current_account = request.user.account
+        try:
+            pal = Account.objects.get(user__id = request.POST.get('pal_id'))
+        except Account.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'User not found'}, status=400)
+        do = request.POST.get('do')
+
+        if do == 'Watch':
+            current_account.friends.add(pal)
+        elif do == 'Unwatch':
+            current_account.friends.remove(pal)
+
+        current_account.save()
+        return JsonResponse({'success':True})
+
+
+    is_ajax_request = request.headers.get("x-requested-with") == "XMLHttpRequest"
     if is_ajax_request:
         html = render_to_string("inqpal/add_pal_results.html", {'users': users})
         data_dict = {'html_from_view': html}

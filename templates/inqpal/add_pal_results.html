@@ -1,12 +1,31 @@
 {% load staticfiles %}
 
 {% if users %}
-<ul>
-    {% for user in users %}
-    <li>{{user}}</li>
-    {% endfor %}
-</ul>
+    <ul>
+        {% for user in users %}
+            <li>
+                <strong>{{ user.user.username }}</strong><br>
+                Favorite Dinosaur: {{ user.fav_dino }}<br>
+                {% if user.picture %}
+                <img class="profile_pic" src="{{ user.picture.url }}">
+                {% else %}
+                <img class="profile_pic" src="{% static 'images/noImageSelected.png' %}">
+                {% endif %}
+                
+                {% if user in request.user.account.friends.all %}
+                    <button class="watch-btn" data-user-id="{{ user.user.id }}">Unwatch</button>
+                {% else %}
+                    <button class="watch-btn" data-user-id="{{ user.user.id }}">Watch</button>
+                {% endif %}
+            </li>
+        {% endfor %}
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+    </ul>
 {% else %}
-<p>no users found</p>
+    <p>No users found</p>
 {% endif %}
+
+<script>
+    const endpoint = "{% url 'inqpal:add_pal' %}";
+</script>
 <script src="{% static 'js/add_pal.js' %}"></script>
