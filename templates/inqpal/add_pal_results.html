@@ -1,0 +1,12 @@
+{% load staticfiles %}
+
+{% if users %}
+<ul>
+    {% for user in users %}
+    <li>{{user}}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>no users found</p>
+{% endif %}
+<script src="{% static 'js/add_pal.js' %}"></script>
