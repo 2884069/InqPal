@@ -3,13 +3,14 @@ from django.contrib.auth.models import User
 from inqpal import models
 from inqpal.models import Account,Comment,Post
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django import forms
-from inqpal.forms import PostForm, UserForm, AccountForm
+from inqpal.forms import  UserForm, AccountForm#, PostForm
 from django.contrib import messages
+from django.template.loader import render_to_string
 
 POSTS_PER_PAGE = 10
 
@@ -133,12 +134,33 @@ def edit_profile(request):
 #removed for testing purposes
 #@login_required
 def add_pal(request):
-    accounts = []
-    def name_contains(account):
-        return str(account) == search_name
+    #accounts = []
+    #def name_contains(account):
+    #    return str(account) == search_name
+    #
+    #if 'search' in request.GET:
+    #    search_name = request.GET['search']
+    #    accounts = filter(name_contains, Account.objects.all())
+    #    return render(request, 'inqpal/add_pal.html', context= {'accounts' : accounts})
+    ctx = {}
+    search_parameter = request.GET.get("q")
+
+    if search_parameter:
+        #users = Account.objects.filter(name__icontains = search_parameter)
+        #users = Account.objects.all()
+        users = []
+    else:
+        users = Account.objects.all()
+    ctx["users"] = users
+
+    #does_req_accept_json = request.accepts("application/json")
+    is_ajax_reqest = request.headers.get("x-requested-with") == "XMLHttpRequest"# and does_req_accept_json
+
+    if is_ajax_reqest:
+        html = render_to_string(template_name = "inqpal/add_pal_results.html",context = {'users':users})#can probs just use ctx
+
+        data_dict = {'html_from_view': html}
+
+        return JsonResponse(data = data_dict, safe = False)
     
-    if 'search' in request.GET:
-        search_name = request.GET['search']
-        accounts = filter(name_contains, Account.objects.all())
-        return render(request, 'inqpal/add_pal.html', context= {'accounts' : accounts})
-    return render(request, 'inqpal/add_pal.html')
+    return render(request, 'inqpal/add_pal.html', context = ctx)
