@@ -22,6 +22,13 @@
     <div class="formPart">
         <label for="{{ user_form.username.id_for_label }}">Username</label>
         {{ user_form.username }}
+        {% if user_form.username.errors %}
+        <ul class="errorlist">
+            {% for error in user_form.username.errors %}
+                <li class="errorLi">{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
     </div>
 
     <div class="formPart">
@@ -32,6 +39,26 @@
     <div class="formPart">
         <label for="{{ user_form.password.id_for_label }}">Password</label>
         {{ user_form.password }}
+        {% if user_form.password.errors %}
+        <ul class="errorlist">
+            {% for error in user_form.password.errors %}
+                <li class="errorLi">{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+
+
+    <div class="formPart">
+        <label for="{{ user_form.confirmation_password.id_for_label }}">Confirm Password</label>
+        {{ user_form.confirmation_password }}
+        {% if user_form.confirmation_password.errors %}
+        <ul class="errorlist">
+            {% for error in user_form.confirmation_password.errors %}
+                <li class="errorLi">{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
     </div>
 
     <div class="formPart">

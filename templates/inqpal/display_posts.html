@@ -1,21 +1,54 @@
 {% extends 'inqpal/base.html'%}
 {% load staticfiles %}
 
-{% block body_block %}
+{% block head_block %}
+    <link rel="stylesheet" href="{% static 'css/display_posts.css' %}" />
+{% endblock %}
 
-<div>
-    {% if posts %}
-        {% for post in posts %}
-            <div class="post_display">
-                {% if post.post.image %}
-                    <img src="{{post.post.image}}">
-                {% endif %}
-                <ul>
-                    <li><strong>{{post.post.creator}}</strong></li>
-                    <li>#{{post.post.category}}</li>
-                    <li>{{post.post.date}}</li>
-                    <li>{{post.post.text}}</li>
-                    <li>roars: {{post.roars}}</li>
+{% block body_block %}
+    <div class="title_block">
+        <h1>{{type}}</h1>
+    </div>
+
+    <div id="display_window">
+        {% if posts %}
+            {% for post in posts %}
+                <div class="post_display">
+                    <div class="post_head">
+                        {% if post.post.creator.picture %}
+                            <img class="profile_pic" src="{{post.post.creator.picture}}">
+                        {% else %}
+                            <img class="profile_pic" src="{% static 'images/noImageSelected.png' %}">
+                        {% endif %}
+                        <h3>{{post.post.creator}}</h3>
+                    </div>
+                    <div class="post_context">
+                        <a href="{% url 'inqpal:categories' %}{{post.post.category}}">#{{post.post.category}}</a>
+                        <p><time>{{post.post.date}}</time></p>
+                    </div>
+                    {% if post.post.image %}
+                        <img class="post_image" src="{{post.post.image}}">
+                    {% else %}
+                        <div class="fake_image"></div>
+                    {% endif %}
+                    <p class="post_text">{{post.post.text}}</p>
+                    
+                    <div class="roar_section">
+                        {% if logged_in %}
+                            {% if post.roared %}
+                                <p>you roared! {{post.roars}}</p>
+                            {% else %}
+                                <p><form id = 'roar_form' method="POST" action="{{this_url}}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name='post' id='what_post' value={{post.post.id}}>
+                                    <input type="submit" name="submit" value="roar" required="required"> {{post.roars}}
+                                </form></p>
+                            {% endif %}
+                        {% else %}
+                            <p>roars: {{post.roars}}</p>
+                        {% endif %}
+                    </div>
+                    <hr>
                     {% if post.comments %}
                         <ul>
                             {% for comment in post.comments %}
@@ -25,13 +58,21 @@
                                 </div></li>
                             {% endfor %}
                         </ul>
+                    {% else %}
+                        <div class="comment_space"></div>
                     {% endif %}
-            </ul>
-            </div>
-        {% endfor %}
-    {% else %}
-        <strong>Error: No posts to show!</strong>
-    {% endif %}
-</div>
-
+                    {% if logged_in %}
+                        <form id = 'comment_form' method="POST" action="{{this_url}}" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="hidden" name='post' id='what_post' value={{post.post.id}}>
+                            {{ form }}
+                            <input type="submit" name = "submit" value = "post" required="required" id = 'comment_button'/>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <strong>Error: No posts to show!</strong>
+        {% endif %}
+    </div>
 {% endblock %}

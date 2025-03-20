@@ -1,0 +1,36 @@
+{% extends 'inqpal/base.html'%}
+{% load staticfiles %}
+
+{% block head_block %}
+    <link rel="stylesheet" href="{% static 'css/display_categories.css' %}" />
+{% endblock %}
+
+{% block body_block %}
+    <div class="title_block">
+        <h1>Categories</h1>
+    </div>
+
+    <div id="display_window">
+        {% if categories %}
+            {% for cat in categories %}
+            <a href="{% url 'inqpal:categories' %}{{cat.category.name}}"><div class="cat_display">
+                    <div class="cat_head">
+                        <h3>#{{cat.category.name}}</h3>
+                    </div>
+                    {% if cat.category.image %}
+                        <img class="cat_image" src="{{cat.category.image}}">
+                    {% else %}
+                        <div class="fake_image"></div>
+                    {% endif %}
+                    <p class="cat_text">{{cat.category.text}}</p>
+                    
+                    <div class="numbers_section">
+                        <p>{{cat.posts}} posts</p>
+                    </div>
+                </div></a>
+            {% endfor %}
+        {% else %}
+            <strong>Error: No categories to show!</strong>
+        {% endif %}
+    </div>
+{% endblock %}
