@@ -263,5 +263,4 @@ def add_pal(request):
         data_dict = {'html_from_view': html}
         return JsonResponse(data_dict, safe=False)
 
-    # Regular rendering of the page (non-AJAX)
     return render(request, 'inqpal/add_pal.html', context=ctx)
