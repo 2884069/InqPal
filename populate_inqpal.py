@@ -7,6 +7,11 @@ from inqpal.models import Account,Post,Comment,Category
 from django.contrib.auth.models import User
 import datetime
 
+def check_if_none(str):
+    if str == "None":
+        return None
+    return str
+
 def populate():
 
     # To make: 
@@ -14,32 +19,19 @@ def populate():
 
     added_accounts = []
 
-    accounts = [
-        {'username':'Harvster',
-         'password':'HarvestingHarves',
-         'email':'harvey@harvey.com',
-         'first_name':'Harvey',
-         'last_name':'MacHarvey',
-         'fav_dino':'Archaeopteryx',
-         'picture':None
-         },
-        {'username':'DinoFLAME',
-         'password':'coolK!d',
-         'email':'Aoife@Campbell.com',
-         'first_name':'Aoife',
-         'last_name':'Campbell',
-         'fav_dino':'Triceratops',
-         'picture':None
-         },
-        {'username':'ROR',
-         'password':'RoarOmegaRoar',
-         'email':'monster@university.com',
-         'first_name':'Richard',
-         'last_name':'White',
-         'fav_dino':'Spinosaurus',
-         'picture':None
-         }
-    ]
+    accounts = []
+    with open(os.path.join("population_files","accounts.csv")) as f:
+        for line in f:
+            account_details = line.split(',')
+            accounts.append({
+                'username':account_details[0].strip(),
+                'password':account_details[1].strip(),
+                'email':account_details[2].strip(),
+                'first_name':account_details[3].strip(),
+                'last_name':account_details[4].strip(),
+                'fav_dino':account_details[5].strip(),
+                'picture':check_if_none(account_details[6].strip())
+            })
 
     # add accounts
     a = None
@@ -49,25 +41,16 @@ def populate():
         added_accounts.append(a)
 
     # create categories
-    categories = [{"name":"Archosaurs",
-                   "text":"",
-                   "image":None},
-                  {"name":"Birds",
-                   "text":"",
-                   "image":None},
-                  {"name":"Ornithopods",
-                   "text":"",
-                   "image":None},
-                  {"name":"Reptiles",
-                   "text":"",
-                   "image":None},
-                  {"name":"Sauropods",
-                   "text":"",
-                   "image":None},
-                  {"name":"Theropods",
-                   "text":"",
-                   "image":None}
-    ]
+    categories = []
+    with open(os.path.join("population_files","categories.csv")) as f:
+        for line in f:
+            category_details = line.split(',')
+            categories.append({
+                'name':category_details[0].strip(),
+                'text':category_details[1].strip().replace("*",","),
+                'image':check_if_none(category_details[2].strip())
+            })
+
     for cat in categories:
         c = add_category(cat['name'],cat['text'],cat['image'])
 
