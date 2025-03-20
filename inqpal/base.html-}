@@ -1,0 +1,93 @@
+[33mefee261[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m removed the search button :) added AJAX stuff
+[33m12fa78e[m fixed views
+[33m6d701de[m account page, login and signup fixed
+[33mfe68e91[m added datetimes (populate script gives naive times)
+[33m8f5e127[m fixed roars in display_posts
+[33m32d1f3b[m display posts basics complete
+[33mdaa943d[m Merge branch 'main' of github.com-2884069:2884069/InqPal
+[33m6dd67f5[m started work on trending
+[33mf161c53[m VERY rudimentary search functionality why did this take me like 4 hours
+[33m7b72515[m VERY rudimentary search functionality why did this take me like 4 hours
+[33m1ecc3e0[m fixed base size issue
+[33m56606a5[m woops
+[33m9ab4620[m base font change and templte for add pal
+[33m766dd19[m added homepage link to inqpal login in top left
+[33ma35c5eb[m removed test comment
+[33m1ccab1f[m CSS for signup and login
+[33m5d899d1[m make post now far more responsive to windo size changes
+[33maa47614[m post max length sorted :)
+[33m42cc31e[m finished formatting and style for make post page
+[33m027f8a6[m more updates to make post!! loks much nicer
+[33mc999597[m added friends (oops xD)
+[33m85c3457[m populate script working, but need to fix roars
+[33m6c84698[m more little fixes :)
+[33m8ce6049[m woops typo
+[33m6fb4ae2[m added header block to allow sub-pages to add their own css fild to the header and css for make_posts
+[33m761653d[m removed unnecacry headers
+[33mb103e53[m added drop down category make a post
+[33md1eb118[m changed base to use id s rather than classes as its more appropriate bcs there should be no duplicates, body is still a class for other uses
+[33mdc7f7f0[m added preview image to make post
+[33m12df5cc[m added basic make post page
+[33mc05f818[m fixed the issue of active page in header not lighting up red, also added basic javascript woo
+[33meaa5635[m moved base css to static file
+[33mb21806b[m updated git ignore to ignore media/ folder
+[33md4aefb8[m updated git ignore to ignore media/ folder
+[33m1a71779[m Delete media/profile_images directory woops
+[33mbb71882[m sorted wrong url for index page - ambers fault as ive not actually made the index page yet :)
+[33m3bd483d[m finally fixed login and signup
+[33m3815a8f[m fixed login and signup
+[33m3f0a62e[m added login required tag to necacerry pages
+[33mf510c74[m added login/signup buttons to base if user is not signed in
+[33mcb80d8a[m more updates to base.html
+[33m3799092[m more updates to base.html
+[33mc3434ca[m more updates to base.html
+[33m42cd13e[m renamed directories correct
+[33meb3d2a8[m fixed the colours of the base to be that of our design
+[33mdd99584[m beautified the base.html template
+[33m0c5a39c[m login and register views and templates
+[33m74c0329[m Accidentally changed Base.html and changed it back
+[33m3a29b91[m Added TEMPLATE_DIR for dynamic paths
+[33mb25e4a2[m Changed DIRS directionary in TEMPLATES data structure using dynamic paths
+[33m85c3c61[m fixed base.html to actually have the corect stuff but it looks teriible
+[33mc32aeef[m settings shit
+[33ma7b4666[m Delete todo.txt
+[33m48b0a68[m testing gitignore pycache
+[33mabf9412[m testing gitignore pycache
+[33mfde6f0e[m testing gitignore
+[33mdd39ab4[m Merge branch 'main' of github.com-2884069:2884069/InqPal
+[33m452edc9[m Delete inqpal/__pycache__ directory
+[33mc8a03c2[m Delete inqpal/migrations/__pycache__ directory
+[33mc7e2276[m Merge branch 'main' of github.com-2884069:2884069/InqPal
+[33md061cfa[m someone said rango lol
+[33m2d17b8a[m tring to fix pull issues
+[33m1414b66[m tring to fix pull issues
+[33m1474c8a[m fixed some bugs
+[33m44c9b77[m fixed some bugs
+[33m6edb203[m Merge branch 'main' of github.com-2884069:2884069/InqPal
+[33m6ba85bd[m fixed merge issues?
+[33m4a1a866[m Delete inqpal_project/__pycache__ directory
+[33mdf31ff0[m Delete inqpal/__pycache__ directory
+[33m3c2a921[m Delete db.sqlite3
+[33m2b83a5a[m working on base.html and index, index not working
+[33m8493542[m fixed model reverse accessors
+[33m7aa0c4f[m working on base.html and index, index not working
+[33me96eab5[m views signup
+[33m7405be1[m Delete db.sqlite3
+[33m6d306d1[m installed app
+[33mcd58f0b[m added views.py with initial view methods, no functionality
+[33ma085679[m login templates and forms.py
+[33m263af03[m initial base.html template made currently has no functionality other than a single block to allow for other templates to be made
+[33m2dffecf[m added a templates/InqPal folder for our HTML docs
+[33mfa2dee0[m minor formatting populate script
+[33m5dc862e[m added accounts to populate script, too scared to test
+[33m958bfd6[m started populate script
+[33m7aa01bb[m models drafted
+[33ma38b23a[m added delegations to URLs
+[33m45665b5[m test
+[33m73336a0[m added delegations
+[33mb93df04[m Merge branch 'main' of github.com-2884069:2884069/InqPal
+[33m312c536[m added basics of whats specified in our specification
+[33mb52f6a6[m Delete InqPal directory
+[33m5e0ba1c[m renamed inqpal app (caps were bad practice) and started urls
+[33mc1b6b1e[m created app
+[33m1f871e6[m first commit

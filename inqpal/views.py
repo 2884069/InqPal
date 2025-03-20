@@ -16,6 +16,8 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 from inqpal.forms import PostForm, UserForm, AccountForm
 from django.contrib import messages
+import datetime
+from django.template.loader import render_to_string
 
 POSTS_PER_PAGE = 10
 
@@ -216,6 +218,8 @@ def make_post(request):
             post = post_form.save(commit = False)
             post.image = request.FILES['image']
             post.creator = request.user.account
+            post.category = Category.objects.get(name = request.POST['category'])
+            post.date = datetime.date.today()
             post.save()
 
         else:
@@ -239,36 +243,25 @@ def edit_profile(request):
     return render(request, 'inqpal/edit_profile.html', context = {'form': form})
         
         
-#removed for testing purposes
-#@login_required
+
+@login_required
 def add_pal(request):
-    #accounts = []
-    #def name_contains(account):
-    #    return str(account) == search_name
-    #
-    #if 'search' in request.GET:
-    #    search_name = request.GET['search']
-    #    accounts = filter(name_contains, Account.objects.all())
-    #    return render(request, 'inqpal/add_pal.html', context= {'accounts' : accounts})
     ctx = {}
     search_parameter = request.GET.get("q")
 
     if search_parameter:
-        #users = Account.objects.filter(name__icontains = search_parameter)
-        #users = Account.objects.all()
-        users = []
+        users = Account.objects.filter(user__username__icontains=search_parameter)  # Example search by username
     else:
         users = Account.objects.all()
+    
     ctx["users"] = users
 
-    #does_req_accept_json = request.accepts("application/json")
-    is_ajax_reqest = request.headers.get("x-requested-with") == "XMLHttpRequest"# and does_req_accept_json
+    is_ajax_request = request.headers.get("x-requested-with") == "XMLHttpRequest"
 
-    if is_ajax_reqest:
-        html = render_to_string(template_name = "inqpal/add_pal_results.html",context = {'users':users})#can probs just use ctx
-
+    if is_ajax_request:
+        html = render_to_string("inqpal/add_pal_results.html", {'users': users})
         data_dict = {'html_from_view': html}
+        return JsonResponse(data_dict, safe=False)
 
-        return JsonResponse(data = data_dict, safe = False)
-    
-    return render(request, 'inqpal/add_pal.html', context = ctx)
+    # Regular rendering of the page (non-AJAX)
+    return render(request, 'inqpal/add_pal.html', context=ctx)
