@@ -15,7 +15,7 @@ from django.urls import reverse
 
 import datetime
 
-POSTS_PER_PAGE = 10
+POSTS_PER_PAGE = 20
 
 def handle_comment_form_post(request):
     comment_form = CommentForm(request.POST)
