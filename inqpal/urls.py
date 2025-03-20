@@ -17,7 +17,7 @@ urlpatterns = [
     path('account/login/', views.user_login, name='login'),#iryna
     path('logout/', views.user_logout, name='logout'),
     path('account/my_account/', views.my_account, name='my_account'),#wang
-    path('account/my_account/make_post', views.make_post, name='make_post'),#amber
-    path('account/my_account/edit_profile', views.edit_profile, name='edit_profile'),#wang
-    path('account/my_account/add_pal', views.add_pal, name='add_pal'),#amber
+    path('account/my_account/make_post/', views.make_post, name='make_post'),#amber
+    path('account/my_account/edit_profile/', views.edit_profile, name='edit_profile'),#wang
+    path('account/my_account/add_pal/', views.add_pal, name='add_pal'),#amber
 ]

@@ -120,6 +120,7 @@ def add_category(name,description,picture):
 
 def add_account(username,password,email,first_name,last_name,fav_dino,picture,friend):
     u = User.objects.get_or_create(username=username,password=password,email=email,first_name=first_name,last_name=last_name)[0]
+    u.set_password(u.password)
     u.save()
     a = Account.objects.get_or_create(user=u,fav_dino=fav_dino,picture=picture)[0]
     if friend != None:
