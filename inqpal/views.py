@@ -1,5 +1,5 @@
 from inqpal import models
-from inqpal.models import Account,Comment,Post
+from inqpal.models import Account,Comment,Post,Category
 from inqpal.forms import PostForm, UserForm, AccountForm, CommentForm, EditProfileForm
 
 from django import forms
@@ -95,12 +95,8 @@ def pals_posts(request,page=0):
 
 def categories(request):
     context_dict = {}
-    categories = []
-    categories.append({"name":"Theropods",
-                       "text":"",
-                       "image":None,
-                       "posts":Post.objects.filter(category="Theropods").count()})
-
+    categories = Category.objects.all()
+    categories = [{"category":x,"posts":Post.objects.filter(category=x).count()} for x in categories]
     context_dict["categories"] = categories
     return render(request,'inqpal/display_categories.html',context=context_dict)
 
@@ -119,7 +115,7 @@ def show_category(request,category_name,page=0):
     context_dict['type'] = category_name
     context_dict['this_url'] = reverse('inqpal:show_category', kwargs={'category_name':category_name})
 
-    post_list = Post.objects.filter(category=category_name).annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
+    post_list = Post.objects.filter(category=Category.objects.get(name=category_name)).annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
     
     # if logged in, checks which posts you've already roared

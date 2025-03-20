@@ -17,13 +17,23 @@ class Account(models.Model):
     def watchers_count(self):
         return self.watchers.count()
 
+class Category(models.Model):
+    NAME_MAX_LEN = 50
+    DESCRIPTION_MAX_LEN = 1000
+    name = models.CharField(max_length=NAME_MAX_LEN,unique=True)
+    description = models.CharField(max_length=DESCRIPTION_MAX_LEN)
+    picture = models.ImageField(upload_to='category_images')
+
+    def __str__(self):
+        return self.name
+
 class Post(models.Model):
-    POST_MAX_LEN = 2000
+    POST_MAX_LEN = 1000
 
     creator = models.ForeignKey(Account, on_delete=models.CASCADE)
     text = models.CharField(max_length=POST_MAX_LEN)
     image = models.ImageField(upload_to='post_images', blank=True)
-    category = models.CharField(max_length=50)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
     roars = models.ManyToManyField(Account,related_name='roared_posts',blank=True)
     date = models.DateField(default=datetime.datetime(2025,1,1))
 

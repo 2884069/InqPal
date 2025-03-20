@@ -3,7 +3,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE','inqpal_project.settings')
 
 import django
 django.setup()
-from inqpal.models import Account,Post,Comment
+from inqpal.models import Account,Post,Comment,Category
 from django.contrib.auth.models import User
 import datetime
 
@@ -48,7 +48,30 @@ def populate():
         print("Account added: " + a.__str__())
         added_accounts.append(a)
 
+    # create categories
+    categories = [{"name":"Archosaurs",
+                   "text":"",
+                   "image":None},
+                  {"name":"Birds",
+                   "text":"",
+                   "image":None},
+                  {"name":"Ornithopods",
+                   "text":"",
+                   "image":None},
+                  {"name":"Reptiles",
+                   "text":"",
+                   "image":None},
+                  {"name":"Sauropods",
+                   "text":"",
+                   "image":None},
+                  {"name":"Theropods",
+                   "text":"",
+                   "image":None}
+    ]
+    for cat in categories:
+        c = add_category(cat['name'],cat['text'],cat['image'])
 
+    # define dictionaries for posts and comments
     post_one_comments = [
         {'creator': added_accounts[1],
          'text':'old news',
@@ -57,19 +80,17 @@ def populate():
          'text':'that ROCKS!',
          'date':datetime.datetime(2025,2,13)}
     ]
-
     post_two_comments = [{'creator':added_accounts[0],
                           'text':'definitely Nessie',
                           'date':datetime.datetime(2025,2,23)}
     ]
-    
     post_two_text = "Plesiosaurs are so cool, I'm pretty sure Nessie is one ngl."
     posts = [{'creator':added_accounts[0],'text':'I <3 deinonychus','category':'Theropods','comments':post_one_comments,'date':datetime.datetime(2025,1,5)},
              {'creator':added_accounts[2],'text':post_two_text,'category':'Reptiles','comments':post_two_comments,'date':datetime.datetime(2025,1,7)},
              {'creator':added_accounts[1],'text':'crocodile .o.','category':'Archosaurs','comments':[],'date':datetime.datetime(2025,3,13)}
     ]
     
-    # adds posts, comments from posts
+    # add posts and comments
     for post in posts:
         p = add_post(post['creator'],post['text'],post['category'],post['date'])
         for comment in post['comments']:
@@ -82,12 +103,18 @@ def populate():
             print(f'- {c.__str__()}')
 
 def add_comment(post,creator,text,date):
-    p = Comment.objects.get_or_create(post=post,creator=creator,text=text,date=date)[0]
-    p.save()
-    return p
+    c = Comment.objects.get_or_create(post=post,creator=creator,text=text,date=date)[0]
+    c.save()
+    return c
     
 def add_post(creator,text,category,date,image=None):
-    c = Post.objects.get_or_create(creator=creator,text=text,category=category,image=image,date=date)[0]
+    category = Category.objects.get(name=category)
+    p = Post.objects.get_or_create(creator=creator,text=text,category=category,image=image,date=date)[0]
+    p.save()
+    return p
+
+def add_category(name,description,picture):
+    c = Category.objects.get_or_create(name=name,description=description,picture=picture)[0]
     c.save()
     return c
 
