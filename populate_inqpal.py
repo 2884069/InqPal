@@ -47,7 +47,7 @@ def populate():
             category_details = line.split(',')
             categories.append({
                 'name':category_details[0].strip(),
-                'text':category_details[1].strip(),
+                'text':category_details[1].strip().replace("*",","),
                 'image':check_if_none(category_details[2].strip())
             })
 
