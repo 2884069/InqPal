@@ -12,6 +12,19 @@ def check_if_none(str):
         return None
     return str
 
+def read_comments(filename,added_accounts):
+    comments = []
+    if check_if_none(filename) != None:
+        with open(os.path.join("population_files",filename)) as f:
+            for line in f:
+                comment_details = line.split(',')
+                comments.append({
+                    'creator':added_accounts[int(comment_details[0].strip())],
+                    'text':comment_details[1].strip().replace("*",","),
+                    'date':datetime.datetime.strptime(comment_details[2].strip(),'%Y %m %d')
+                })
+    return comments
+
 def populate():
 
     # To make: 
@@ -59,38 +72,21 @@ def populate():
     # read posts and comments
 
     posts = []
-    comments = []
     with open(os.path.join("population_files","posts.csv")) as f:
         for line in f:
             post_details = line.split(',')
             posts.append({
-                'creator':category_details[0].strip(),
-                'text':category_details[1].strip().replace("*",","),
-                'image':check_if_none(category_details[2].strip())
+                'creator':added_accounts[int(post_details[0].strip())],
+                'text':post_details[1].strip().replace("*",","),
+                'category':post_details[2].strip(),
+                'comments':read_comments(post_details[3].strip(),added_accounts),
+                'date':datetime.datetime.strptime(post_details[4].strip(),'%Y %m %d'),
+                'image':check_if_none(post_details[5].strip())
             })
-
-    # define dictionaries for posts and comments
-    post_one_comments = [
-        {'creator': added_accounts[1],
-         'text':'old news',
-         'date':datetime.datetime(2025,1,23)},
-        {'creator': added_accounts[2],
-         'text':'that ROCKS!',
-         'date':datetime.datetime(2025,2,13)}
-    ]
-    post_two_comments = [{'creator':added_accounts[0],
-                          'text':'definitely Nessie',
-                          'date':datetime.datetime(2025,2,23)}
-    ]
-    post_two_text = "Plesiosaurs are so cool, I'm pretty sure Nessie is one ngl."
-    posts = [{'creator':added_accounts[0],'text':'I <3 deinonychus','category':'Theropods','comments':post_one_comments,'date':datetime.datetime(2025,1,5)},
-             {'creator':added_accounts[2],'text':post_two_text,'category':'Reptiles','comments':post_two_comments,'date':datetime.datetime(2025,1,7)},
-             {'creator':added_accounts[1],'text':'crocodile .o.','category':'Archosaurs','comments':[],'date':datetime.datetime(2025,3,13)}
-    ]
     
     # add posts and comments
     for post in posts:
-        p = add_post(post['creator'],post['text'],post['category'],post['date'])
+        p = add_post(post['creator'],post['text'],post['category'],post['date'],post['image'])
         for comment in post['comments']:
             add_comment(p, comment['creator'], comment['text'],comment['date'])
 
