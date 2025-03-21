@@ -1,6 +1,6 @@
 const user_input = $("#search_box_input");
 const users_div = $('#add_pal_results');
-const delay_by_in_ms = 500;
+const delay_by_in_ms = 200;
 let scheduled_function = false;
 
 let ajax_call = function (endpoint, request_parameters) {

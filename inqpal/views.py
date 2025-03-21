@@ -258,6 +258,17 @@ def add_pal(request):
         users = Account.objects.exclude(user__id = request.user.id)
     
     ctx["users"] = users
+    matches = len(users)
+    if matches <= 0:
+        ctx['number_of_matches'] = 'No'
+    else:
+        ctx['number_of_matches'] = str(matches)
+
+    if matches == 1:
+        ctx['number_of_matches'] += ' Match'
+    else:
+        ctx['number_of_matches'] += ' Matches'
+    
 
 
     if request.method == 'POST':
@@ -272,6 +283,8 @@ def add_pal(request):
             current_account.friends.add(pal)
         elif do == 'Unwatch':
             current_account.friends.remove(pal)
+        else:
+            return JsonResponse({'success': False, 'error': 'invalid operation please reload page'}, status=400)
 
         current_account.save()
         return JsonResponse({'success':True})
@@ -279,7 +292,7 @@ def add_pal(request):
 
     is_ajax_request = request.headers.get("x-requested-with") == "XMLHttpRequest"
     if is_ajax_request:
-        html = render_to_string("inqpal/add_pal_results.html", {'users': users})
+        html = render_to_string("inqpal/add_pal_results.html", ctx)
         data_dict = {'html_from_view': html}
         return JsonResponse(data_dict, safe=False)
 

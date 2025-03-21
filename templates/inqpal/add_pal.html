@@ -2,11 +2,14 @@
 {% load staticfiles %}
 
 {% block head_block %}
-
+<link rel = "stylesheet" href="{% static 'css/add_pal.css' %}" />
 {% endblock %}
 
 {% block body_block %}
-<input id="search_box_input" type="search" name="search"> 
+<div id = 'search_area'>
+    <h2><label id = 'search_box_label'>Find Your Pals:</label></h2>
+    <input id="search_box_input" type="search" name="search"> 
+</div>
 <div id = 'add_pal_results'>
     {% include 'inqpal/add_pal_results.html' %}
 </div>

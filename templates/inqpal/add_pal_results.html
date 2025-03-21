@@ -1,7 +1,7 @@
 {% load staticfiles %}
-
+<h3>{{number_of_matches}} Found</h3>
 {% if users %}
-    <ul>
+    <ul id = >
         {% for user in users %}
             <li>
                 <strong>{{ user.user.username }}</strong><br>
