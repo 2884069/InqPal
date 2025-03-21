@@ -19,6 +19,7 @@ def populate():
 
     added_accounts = []
 
+    # read accounts
     accounts = []
     with open(os.path.join("population_files","accounts.csv")) as f:
         for line in f:
@@ -40,7 +41,7 @@ def populate():
         print("Account added: " + a.__str__())
         added_accounts.append(a)
 
-    # create categories
+    # read categories
     categories = []
     with open(os.path.join("population_files","categories.csv")) as f:
         for line in f:
@@ -51,8 +52,22 @@ def populate():
                 'image':check_if_none(category_details[2].strip())
             })
 
+    # add categories
     for cat in categories:
         c = add_category(cat['name'],cat['text'],cat['image'])
+
+    # read posts and comments
+
+    posts = []
+    comments = []
+    with open(os.path.join("population_files","posts.csv")) as f:
+        for line in f:
+            post_details = line.split(',')
+            posts.append({
+                'creator':category_details[0].strip(),
+                'text':category_details[1].strip().replace("*",","),
+                'image':check_if_none(category_details[2].strip())
+            })
 
     # define dictionaries for posts and comments
     post_one_comments = [

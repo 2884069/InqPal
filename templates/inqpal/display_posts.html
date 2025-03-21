@@ -16,7 +16,7 @@
                 <div class="post_display">
                     <div class="post_head">
                         {% if post.post.creator.picture %}
-                            <img class="profile_pic" src="{{post.post.creator.picture}}">
+                            <img class="profile_pic" src="{{ MEDIA_URL }}{{post.post.creator.picture}}">
                         {% else %}
                             <img class="profile_pic" src="{% static 'images/noImageSelected.png' %}">
                         {% endif %}
@@ -27,7 +27,7 @@
                         <p><time>{{post.post.date}}</time></p>
                     </div>
                     {% if post.post.image %}
-                        <img class="post_image" src="{{post.post.image}}">
+                        <img class="post_image" src="{{ MEDIA_URL }}{{post.post.image}}">
                     {% else %}
                         <div class="fake_image"></div>
                     {% endif %}

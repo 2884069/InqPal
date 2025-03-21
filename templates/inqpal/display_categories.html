@@ -18,7 +18,7 @@
                         <h3>#{{cat.category.name}}</h3>
                     </div>
                     {% if cat.category.image %}
-                        <img class="cat_image" src="{{cat.category.image}}">
+                        <img class="cat_image" src="{{ MEDIA_URL }}{{cat.category.image}}">
                     {% else %}
                         <div class="fake_image"></div>
                     {% endif %}
