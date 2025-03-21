@@ -37,7 +37,10 @@ def handle_roar_form_post(request):
     post.roars.add(request.user.account)
 
 def index(request):
-    return render(request, 'inqpal/base.html', context = {})
+    if request.user.is_authenticated:
+        return redirect('inqpal:palsposts')
+    else:
+        return redirect('inqpal:trending')
 
 def trending(request,page=0):
     context_dict = {}
@@ -250,9 +253,9 @@ def add_pal(request):
     search_parameter = request.GET.get("q")
 
     if search_parameter:
-        users = Account.objects.filter(user__username__icontains=search_parameter)
+        users = Account.objects.filter(user__username__icontains=search_parameter).exclude(user__id = request.user.id)
     else:
-        users = Account.objects.all()
+        users = Account.objects.exclude(user__id = request.user.id)
     
     ctx["users"] = users
 
