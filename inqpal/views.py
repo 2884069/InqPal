@@ -18,6 +18,7 @@ from inqpal.forms import PostForm, UserForm, AccountForm
 from django.contrib import messages
 import datetime
 from django.template.loader import render_to_string
+import json
 
 POSTS_PER_PAGE = 20
 
@@ -203,9 +204,18 @@ def my_account(request):
     except ObjectDoesNotExist:
         messages.error(request, "Your account profile does not exist. Please complete your registration.")
         return redirect(reverse('inqpal:register'))
+    
+    posts = Post.objects.filter(creator=account).order_by('-date')[:3]
+    if request.method == "POST":
+        selected_posts = request.POST.getlist('selected_posts')
+        Post.objects.filter(id__in=selected_posts).delete()
+        messages.success(request, "Selected posts deleted successfully.")
+        return redirect(reverse('inqpal:my_account'))
+    
     context = {
         'account': account,
-        'posts': account.posts_count(),
+        'posts': posts,
+        'posts_count': account.posts_count(),
         'friends': account.friends_count(),
         'watchers': account.watchers_count(),
     }

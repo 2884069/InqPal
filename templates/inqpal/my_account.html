@@ -1,10 +1,18 @@
 {% extends 'inqpal/base.html' %}
 {% load staticfiles %}
 
+{% block head_block %}
+    <link rel = "stylesheet" href="{% static 'css/my_account.css' %}">
+{% endblock %}
+
 {% block body_block %}
 <div class="mainDiv">
     <div class = "imagePart">
-        <img src="{{ user.account.picture.url }}" alt="">
+        {% if user.account.picture %}
+            <img src="{{ user.account.picture.url }}" alt="Profile Picture">
+        {% else %}
+            <img src="{% static 'images/noImageSelected.png' %}" alt="Default Profile Picture">
+        {% endif %}
     </div>
     <div class = "userPart">
         <div class = "accountInfo">
@@ -12,25 +20,50 @@
             <p>Favorite Dinosaur: {{ account.fav_dino }}</p>
         </div>
         <div class = "socialInfo">
-            <p>Posts: {{ posts }}</p>
-            <p>Watchers: {{ watchers}}</p>
-            <p>Pals: {{ friends }}</p>
+            <p>{{ posts_count }} posts</p>
+            <p>{{ watchers}} watchers</p>
+            <p>{{ friends }} pals</p>
         </div>
     </div>
 
-    <div id="actionButtons">
-        <div class = "topRightButtons">
+    <div class = "topRightButtons">
             <button class = "editProfileBtn" onclick = "window.location.href = '{% url 'inqpal:edit_profile' %}'">Edit Profile</button>
             <form method="POST" action="{% url 'inqpal:logout' %}">
                 {% csrf_token %}
-                <button class = "logOutBtn" type="submit">Logout</button>
+                <button class = "logOutBtn" type="submit">Log Out</button>
             </form>
-            <button class = "addPalBtn" onclick = "window.location.href = '{% url 'inqpal:add_pal' %}'">Add Pal</button>
-        </div>
+            <button class = "addPalBtn" onclick = "window.location.href = '{% url 'inqpal:add_pal' %}'">Add a Pal</button>
     </div>
 </div>
-<div class "bottomButtons">
-    <button class = "createPostBtn" onclick = "window.location.href = '{% url 'inqpal:make_post' %}'">create a post</button>
-   <!-- <button class = "deletePostBtn" onclick = "window.location.href = '{% url 'inqpal:' %}'">delete a post</button> -->
+
+<div class="posts-container">
+    <form method="POST">
+        {% csrf_token %}
+        <div class="post-row">
+            {% for post in posts %}
+                <div class="post-card">
+                    <input type="checkbox" name="selected_posts" value="{{ post.id }}" class="post-checkbox">
+                    <div class="post-head">
+                        <h3>{{ post.creator.user.username }}</h3>
+                        <span class="post-date">{{ post.date }}</span>
+                    </div>
+                    <div class="post-image">
+                        {% if post.image %}
+                            <img src="{{ post.image.url }}" alt="Post Image">
+                        {% else %}
+                            <div class="fake-image"></div>
+                        {% endif %}
+                    </div>
+                    <div class="post-text">
+                        <p>{{ post.text }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="bottom-buttons">
+            <button class="createPostBtn" type="button" onclick="window.location.href = '{% url 'inqpal:make_post' %}'">Create a Post</button>
+            <button class="deletePostBtn" type="submit">Delete a Post</button>
+        </div>
+    </form>
 </div>
 {% endblock %}
