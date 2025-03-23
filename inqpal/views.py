@@ -18,7 +18,7 @@ from inqpal.forms import PostForm, UserForm, AccountForm
 from django.contrib import messages
 import datetime
 from django.template.loader import render_to_string
-import json
+
 
 POSTS_PER_PAGE = 20
 
