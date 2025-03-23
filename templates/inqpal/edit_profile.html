@@ -1,11 +1,25 @@
 {% extends 'inqpal/base.html' %}
 {% load staticfiles %}
 
+{% block head_block %}
+    <link rel = "stylesheet" href="{% static 'css/edit_profile.css' %}">
+{% endblock %}
+
 {% block body_block %}
 <h1>Edit Profile</h1>
 <form method = "POST" enctype = "multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p}}
+    <div class = "formPart">
+        <label for = "favDinosaur">Favourite Dinosaur</label>
+        {{ form.fav_dino}}
+    </div>
+    <div class = "formPart">
+        <label for = "picture">Profile Picture</label>
+        <div class = "currentPicture">
+            {{ form.picture}}
+        </div>
+    </div>
+
     <button type = "submit">Save changes</button>
 </form>
 {% endblock %}

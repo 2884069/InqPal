@@ -1,0 +1,61 @@
+h1 {
+    font-size: 36px;
+    color: black;
+    text-align: center;
+}
+
+form {
+    max-width: 650px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px hidden white;
+    border-radius: 10px;
+    background-color: aliceblue;
+}
+
+.formPart{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.formPart label {
+    font-size: 24px;
+    font-weight:bold;
+    margin-bottom: 15px;
+}
+
+.currenPicture {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+input[type = "text"], input[type = "file"], select, textarea{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    padding: 14px 26;
+    font-size: 20px;
+    border:1px solid black;
+    border-radius: 10px;
+}
+
+button[type = "submit"]{
+    background-color: green;
+    color: white;
+    padding: 14px 26;
+    font-size: 20px;
+    cursor: pointer;
+    border: none;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+button[type = "submit"]:hover {
+    opacity: 0.8;
+}
