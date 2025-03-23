@@ -36,33 +36,33 @@
     </div>
 </div>
 
-<div class="posts-container">
+<div class="postsPart">
     <form method="POST">
         {% csrf_token %}
-        <div class="post-row">
+        <div class="postInRow">
             {% for post in posts %}
-                <div class="post-card">
+                <div class="individualPost">
                     <input type="checkbox" name="selected_posts" value="{{ post.id }}" class="post-checkbox">
-                    <div class="post-head">
+                    <div class="postInfo">
                         <h3>{{ post.creator.user.username }}</h3>
-                        <span class="post-date">{{ post.date }}</span>
+                        <span class="postDate">{{ post.date }}</span>
                     </div>
-                    <div class="post-image">
+                    <div class="postImage">
                         {% if post.image %}
                             <img src="{{ post.image.url }}" alt="Post Image">
                         {% else %}
-                            <div class="fake-image"></div>
+                            <div class="fakeImage"></div>
                         {% endif %}
                     </div>
-                    <div class="post-text">
+                    <div class="postText">
                         <p>{{ post.text }}</p>
                     </div>
                 </div>
             {% endfor %}
         </div>
-        <div class="bottom-buttons">
+        <div class="bottomButtons">
             <button class="createPostBtn" type="button" onclick="window.location.href = '{% url 'inqpal:make_post' %}'">Create a Post</button>
-            <button class="deletePostBtn" type="submit">Delete a Post</button>
+            <button class="deletePostBtn" type="submit" title = "Tick checkbox to delete a post">Delete a Post</button>
         </div>
     </form>
 </div>
