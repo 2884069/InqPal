@@ -1,31 +1,41 @@
 {% load staticfiles %}
-<h3>{{number_of_matches}} Found</h3>
-{% if users %}
-    <ul id = >
-        {% for user in users %}
-            <li>
-                <strong>{{ user.user.username }}</strong><br>
-                Favorite Dinosaur: {{ user.fav_dino }}<br>
+<div id = 'number_of_matches'>
+    <h3>{{number_of_matches}} Found</h3>
+</div>
+<div id = 'results_div'>
+{% if users_friends.0 or users_friends.1 %}
+    <ul id="results">
+        {% for user in users_friends.0 %}
+            <li class="results_li">
                 {% if user.picture %}
                 <img class="profile_pic" src="{{ user.picture.url }}">
                 {% else %}
                 <img class="profile_pic" src="{% static 'images/noImageSelected.png' %}">
                 {% endif %}
-                
-                {% if user in request.user.account.friends.all %}
-                    <button class="watch-btn" data-user-id="{{ user.user.id }}">Unwatch</button>
-                {% else %}
-                    <button class="watch-btn" data-user-id="{{ user.user.id }}">Watch</button>
-                {% endif %}
+                <div>
+                    <strong class = 'results_username'>{{ user.user.username }}</strong><br>
+                    <span class="fav_dino">Favorite Dinosaur : {{ user.fav_dino }}</span>
+                </div>
+                <button class="watch_button" data-user-id="{{ user.user.id }}">Watch</button>
             </li>
         {% endfor %}
-        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        {% for user in users_friends.1 %}
+            <li class="results_li">
+                {% if user.picture %}
+                <img class="profile_pic" src="{{ user.picture.url }}">
+                {% else %}
+                <img class="profile_pic" src="{% static 'images/noImageSelected.png' %}">
+                {% endif %}
+                <div>
+                    <strong class = 'results_username'>{{ user.user.username }}</strong><br>
+                    <span class="fav_dino">Favorite Dinosaur : {{ user.fav_dino }}</span>
+                </div>
+                <button class="unwatch_button" data-user-id="{{ user.user.id }}">Unwatch</button>
+            </li>
+        {% endfor %}
     </ul>
 {% else %}
     <p>No users found</p>
 {% endif %}
+</div>
 
-<script>
-    const endpoint = "{% url 'inqpal:add_pal' %}";
-</script>
-<script src="{% static 'js/add_pal.js' %}"></script>

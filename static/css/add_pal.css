@@ -1,0 +1,113 @@
+#search_area {
+    padding-inline: 10vw;
+    font-family: "Poppins", sans-serif;
+    min-height: fit-content;
+}
+
+#search_box {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 0.5em;
+    border: 0.1rem solid #ccc;
+    border-radius: 1em;
+    background: #A9A49C;
+}
+#search_box_icon {
+    font-size: 2em;
+    margin-top: -.2em;
+    padding-left: 1%;
+}
+#clear_button {
+    cursor: pointer;
+    font-size: 2em;
+    background: none;
+    border: none;
+}
+#search_box_input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding-right: 1%;
+    background: transparent;
+    font-size: 2em;
+}
+
+
+
+
+
+
+
+#add_pal_results {
+    font-family: "Poppins", sans-serif;
+    padding-inline: 12vw;
+}
+
+#number_of_matches {
+    text-align: center;  /* Centers the text horizontally */
+}
+
+#results_div {
+    height: 100%; /* Full height of the screen */
+    display: flex; /* Enable flexbox on body */
+    justify-content: center; /* Center content horizontally */
+    align-items: center; /* Center content vertically */
+}
+
+#results {
+    list-style-type: none; /* Remove default list styling */
+}
+
+.results_li {
+    display: flex;           /* Use flexbox to align items inside each list item */
+    align-items: center;     /* Vertically align items in the center */
+    margin-bottom: 5%;       /* Space between list items in relative percentage */
+    width: 100%;              /* Optional: Adjust the width of each list item */
+}
+
+.results_username {
+    margin-right: 4em;     /* Space between username and the next item */
+    font-size: x-large;
+}
+
+.profile_pic {
+    width: 5em;            /* Adjust the size of the profile picture using relative units */
+    aspect-ratio: 1/1;
+    margin-right: 4em;     /* Space between the image and the next item */
+}
+
+.watch_button, .unwatch_button {
+    padding: 0.5em 1em;      /* Adjust button size with relative units */
+    margin-left: 1em;        /* Space between button and other elements */
+    width: 9em;
+    cursor: pointer;
+    color: white;
+    border: none;
+    float: right;
+    font-size: large;
+}
+
+.watch_button {
+    background-color: #4E8E35;
+}
+
+.unwatch_button {
+    background-color: #f44336; /* Red background for 'Unwatch' button */
+}
+
+.watch_button:hover, .unwatch_button:hover {
+    background-color: #A9A49C; /* Hover effect */
+    color: black;
+}
+
+.fav_dino {
+    display: block;          /* Make it a block element to show it under the username */
+    margin-top: 0.5em;       /* Space between the username and favorite dinosaur */
+    font-style: italic;      /* Optional styling for the favorite dinosaur */
+    width: 30vw;
+}
+
+
+
+

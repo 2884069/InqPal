@@ -259,16 +259,20 @@ def edit_profile(request):
 
 @login_required
 def add_pal(request):
-    ctx = {}
+    ctx = {'users_friends': [[],[]]}
     search_parameter = request.GET.get("q")
 
     if search_parameter:
-        users = Account.objects.filter(user__username__icontains=search_parameter).exclude(user__id = request.user.id)
+        users_friends = Account.objects.filter(user__username__icontains=search_parameter).exclude(user__id = request.user.id).filter(user__id__in= request.user.account.friends.all())
+        users_not_friends = Account.objects.filter(user__username__icontains=search_parameter).exclude(user__id = request.user.id).exclude(user__id__in= request.user.account.friends.all())
     else:
-        users = Account.objects.exclude(user__id = request.user.id)
+        users_friends = Account.objects.exclude(user__id = request.user.id).filter(user__id__in= request.user.account.friends.all())
+        users_not_friends = Account.objects.exclude(user__id = request.user.id).exclude(user__id__in= request.user.account.friends.all())
     
-    ctx["users"] = users
-    matches = len(users)
+    ctx["users_friends"][0] = users_not_friends
+    ctx["users_friends"][1] = users_friends
+
+    matches = len(users_friends) + len(users_not_friends)
     if matches <= 0:
         ctx['number_of_matches'] = 'No'
     else:
