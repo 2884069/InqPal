@@ -234,6 +234,7 @@ def make_post(request):
             post.category = Category.objects.get(name = request.POST['category'])
             post.date = datetime.date.today()
             post.save()
+            return redirect(reverse('inqpal:my_account'))
 
         else:
             print(post_form.errors)
@@ -259,15 +260,30 @@ def edit_profile(request):
 
 @login_required
 def add_pal(request):
-    ctx = {}
+    ctx = {'users_friends': [[],[]]}
     search_parameter = request.GET.get("q")
 
     if search_parameter:
-        users = Account.objects.filter(user__username__icontains=search_parameter).exclude(user__id = request.user.id)
+        users_friends = Account.objects.filter(user__username__icontains=search_parameter).exclude(user__id = request.user.id).filter(user__id__in= request.user.account.friends.all())
+        users_not_friends = Account.objects.filter(user__username__icontains=search_parameter).exclude(user__id = request.user.id).exclude(user__id__in= request.user.account.friends.all())
     else:
-        users = Account.objects.exclude(user__id = request.user.id)
+        users_friends = Account.objects.exclude(user__id = request.user.id).filter(user__id__in= request.user.account.friends.all())
+        users_not_friends = Account.objects.exclude(user__id = request.user.id).exclude(user__id__in= request.user.account.friends.all())
     
-    ctx["users"] = users
+    ctx["users_friends"][0] = users_not_friends
+    ctx["users_friends"][1] = users_friends
+
+    matches = len(users_friends) + len(users_not_friends)
+    if matches <= 0:
+        ctx['number_of_matches'] = 'No'
+    else:
+        ctx['number_of_matches'] = str(matches)
+
+    if matches == 1:
+        ctx['number_of_matches'] += ' Match'
+    else:
+        ctx['number_of_matches'] += ' Matches'
+    
 
 
     if request.method == 'POST':
@@ -282,6 +298,8 @@ def add_pal(request):
             current_account.friends.add(pal)
         elif do == 'Unwatch':
             current_account.friends.remove(pal)
+        else:
+            return JsonResponse({'success': False, 'error': 'invalid operation please reload page'}, status=400)
 
         current_account.save()
         return JsonResponse({'success':True})
@@ -289,7 +307,7 @@ def add_pal(request):
 
     is_ajax_request = request.headers.get("x-requested-with") == "XMLHttpRequest"
     if is_ajax_request:
-        html = render_to_string("inqpal/add_pal_results.html", {'users': users})
+        html = render_to_string("inqpal/add_pal_results.html", ctx)
         data_dict = {'html_from_view': html}
         return JsonResponse(data_dict, safe=False)
 

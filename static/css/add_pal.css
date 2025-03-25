@@ -1,0 +1,113 @@
+#search_area {
+    padding-inline: 10vw;
+    font-family: "Poppins", sans-serif;
+    min-height: fit-content;
+}
+
+#search_box {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-left: 0.5em;
+    border: 0.1rem solid #ccc;
+    border-radius: 1em;
+    background: #A9A49C;
+}
+#search_box_icon {
+    font-size: 2em;
+    margin-top: -.2em;
+    padding-left: 1%;
+}
+#clear_button {
+    cursor: pointer;
+    font-size: 2em;
+    background: none;
+    border: none;
+}
+#search_box_input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding-right: 1%;
+    background: transparent;
+    font-size: 2em;
+}
+
+
+
+
+
+
+
+#add_pal_results {
+    font-family: "Poppins", sans-serif;
+    padding-inline: 12vw;
+}
+
+#number_of_matches {
+    text-align: center;
+}
+
+#results_div {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#results {
+    list-style-type: none;
+}
+
+.results_li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5%;
+    width: 100%;
+}
+
+.results_username {
+    margin-right: 4em;
+    font-size: x-large;
+}
+
+.profile_pic {
+    width: 5em;
+    aspect-ratio: 1/1;
+    margin-right: 4em;
+}
+
+.watch_button, .unwatch_button {
+    padding: 0.5em 1em;
+    margin-left: 1em;
+    width: 9em;
+    cursor: pointer;
+    color: white;
+    border: none;
+    float: right;
+    font-size: large;
+}
+
+.watch_button {
+    background-color: #4E8E35;
+}
+
+.unwatch_button {
+    background-color: #f44336;
+}
+
+.watch_button:hover, .unwatch_button:hover {
+    background-color: #A9A49C;
+    color: black;
+}
+
+.fav_dino {
+    display: block;
+    margin-top: 0.5em;
+    font-style: italic;
+    width: 30vw;
+}
+
+
+
+

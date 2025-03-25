@@ -2,13 +2,25 @@
 {% load staticfiles %}
 
 {% block head_block %}
-
+<link rel = "stylesheet" href="{% static 'css/add_pal.css' %}" />
 {% endblock %}
 
 {% block body_block %}
-<input id="search_box_input" type="search" name="search"> 
+<div id = 'search_area'>
+    <h2 id = 'search_box_title'>Find Your Pals:</h2>
+    <div id = 'search_box'>
+        <span id="search_box_icon">&#x2315;</span>
+        <input id="search_box_input" type="text" name="search">
+        <input type="reset" id = 'clear_button' value = '&#x2b59;'>
+    </div>
+</div>
 <div id = 'add_pal_results'>
     {% include 'inqpal/add_pal_results.html' %}
+    <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+    <script>
+        const endpoint = "{% url 'inqpal:add_pal' %}";
+    </script>
+    <script src="{% static 'js/add_pal.js' %}"></script>
 </div>
 
 {% endblock %}
