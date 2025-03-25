@@ -234,6 +234,7 @@ def make_post(request):
             post.category = Category.objects.get(name = request.POST['category'])
             post.date = datetime.date.today()
             post.save()
+            return redirect(reverse('inqpal:my_account'))
 
         else:
             print(post_form.errors)
