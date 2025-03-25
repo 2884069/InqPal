@@ -45,41 +45,41 @@
 }
 
 #number_of_matches {
-    text-align: center;  /* Centers the text horizontally */
+    text-align: center;
 }
 
 #results_div {
-    height: 100%; /* Full height of the screen */
-    display: flex; /* Enable flexbox on body */
-    justify-content: center; /* Center content horizontally */
-    align-items: center; /* Center content vertically */
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #results {
-    list-style-type: none; /* Remove default list styling */
+    list-style-type: none;
 }
 
 .results_li {
-    display: flex;           /* Use flexbox to align items inside each list item */
-    align-items: center;     /* Vertically align items in the center */
-    margin-bottom: 5%;       /* Space between list items in relative percentage */
-    width: 100%;              /* Optional: Adjust the width of each list item */
+    display: flex;
+    align-items: center;
+    margin-bottom: 5%;
+    width: 100%;
 }
 
 .results_username {
-    margin-right: 4em;     /* Space between username and the next item */
+    margin-right: 4em;
     font-size: x-large;
 }
 
 .profile_pic {
-    width: 5em;            /* Adjust the size of the profile picture using relative units */
+    width: 5em;
     aspect-ratio: 1/1;
-    margin-right: 4em;     /* Space between the image and the next item */
+    margin-right: 4em;
 }
 
 .watch_button, .unwatch_button {
-    padding: 0.5em 1em;      /* Adjust button size with relative units */
-    margin-left: 1em;        /* Space between button and other elements */
+    padding: 0.5em 1em;
+    margin-left: 1em;
     width: 9em;
     cursor: pointer;
     color: white;
@@ -93,18 +93,18 @@
 }
 
 .unwatch_button {
-    background-color: #f44336; /* Red background for 'Unwatch' button */
+    background-color: #f44336;
 }
 
 .watch_button:hover, .unwatch_button:hover {
-    background-color: #A9A49C; /* Hover effect */
+    background-color: #A9A49C;
     color: black;
 }
 
 .fav_dino {
-    display: block;          /* Make it a block element to show it under the username */
-    margin-top: 0.5em;       /* Space between the username and favorite dinosaur */
-    font-style: italic;      /* Optional styling for the favorite dinosaur */
+    display: block;
+    margin-top: 0.5em;
+    font-style: italic;
     width: 30vw;
 }
 

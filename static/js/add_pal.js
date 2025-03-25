@@ -60,7 +60,7 @@ let watch = function () {
     });
 };
 
-// Use event delegation for the buttons inside users_div
+
 users_div.on('click', '.watch_button, .unwatch_button', watch);
 
 $('#clear_button').on('click', function () {
