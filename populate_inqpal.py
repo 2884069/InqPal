@@ -70,7 +70,6 @@ def populate():
         c = add_category(cat['name'],cat['text'],cat['image'])
 
     # read posts and comments
-
     posts = []
     with open(os.path.join("population_files","posts.csv")) as f:
         for line in f:

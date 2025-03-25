@@ -84,7 +84,7 @@
 }
 
 .post_text {
-    height: 75px;
+    min-height: 75px;
     font-family:'Courier New', Courier, monospace;
 }
 
