@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
-from inqpal.models import Account
+from inqpal.models import Account,Comment
 
 class LoginAndSignUpTests(TestCase):
     def setUp(self):
@@ -105,3 +105,11 @@ class LoginAndSignUpTests(TestCase):
         response = self.client.post(reverse('inqpal:register'), {'username': ''})  
         self.assertEqual(response.status_code, 200)  
         self.assertFalse(User.objects.filter(username='').exists())
+
+    def test_comment_trending(self):
+        response = self.client.post(reverse('inqpal:trending'), {
+            'post': '',
+            
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Comment.objects.filter().exists())
