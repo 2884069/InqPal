@@ -111,15 +111,6 @@ class LoginAndSignUpTests(TestCase):
         self.assertEqual(response.status_code, 200)  
         self.assertFalse(User.objects.filter(username='').exists())
 
-    def test_comment_trending(self):
-        response = self.client.post(reverse('inqpal:trending'), {
-            'post': '',
-            
-        })
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(Comment.objects.filter().exists())
-
-
 class BaseTests(TestCase):
 
     def setUp(self):
@@ -290,3 +281,37 @@ class CreatePostTests(TestCase):
         response = self.client.get(reverse('inqpal:make_post'))
         content = response.content.decode()
         self.assertIn('<img id = \'picture_preview\' src = "/static/images/noImageSelected.png"/>', content, 'default image not showing when no image has been slected')
+
+class DisplayPostTests(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', email='test@example.com', password='TestPassword123')
+        self.account = Account.objects.create(user=self.user, fav_dino='T-Rex')
+        self.client.login(username='testuser', password='TestPassword123')
+
+    def make_category(self):
+        image = "chernobylFox.jpg"
+        test_category = Category.objects.get_or_create(name='test_category',description='test_desc',picture=image)[0]
+        test_category.save()
+        return test_category
+    
+    def make_post(self):
+        category = self.make_category()
+        image = "chernobylFox.jpg"
+        test_post = Post.objects.get_or_create(
+            creator = self.account,
+            image=image,
+            text='test_text',
+            category=category)[0]
+        test_post.save()
+        return test_post
+    
+    def test_post_comment(self):
+        post = self.make_post()
+        response = self.client.post(reverse('inqpal:trending'), {
+            'post': post.id,
+            'submit':'post',
+            'text':'test comment 123'
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(Comment.objects.filter(text='test comment 123').exists())
