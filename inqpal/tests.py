@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 from inqpal.models import Account,Comment
+from inqpal.urls import urlpatterns
 
 class LoginAndSignUpTests(TestCase):
     def setUp(self):
@@ -113,3 +114,61 @@ class LoginAndSignUpTests(TestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertTrue(Comment.objects.filter().exists())
+
+
+class BaseTests(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', email='test@example.com', password='TestPassword123')
+        self.account = Account.objects.create(user=self.user, fav_dino='T-Rex')
+
+    def test_base_used_on_all_pages(self):
+        for urlpattern in urlpatterns:
+            try:
+                response = self.client.get(reverse(f'inqpal:{urlpattern.name}'),follow=True)
+            except:
+                continue
+            self.assertTemplateUsed(response, 'inqpal/base.html', f'{urlpattern.name} page does not use base.html as a template')
+
+    def test_base_redirect(self):
+        response = self.client.get(reverse('inqpal:index'))
+        self.assertEqual(response.status_code, 302, 'index not redirecting to either trending or pals posts')
+    
+    
+    def test_base_title(self):
+        response = self.client.get(reverse('inqpal:index'), follow=True)
+        content = response.content.decode()
+        self.assertIn('InqPal', content, '"InqPal" not present in header when user is not loged in')
+        self.assertIn('an inquisition of paleontologists', content, '"an inquisition of paleontologists" not present in header when user is not loged in')
+
+
+    def test_base_login_change(self):
+        """
+        Checks to see if the base header changes when a user logs in.
+        """
+        response = self.client.get(reverse('inqpal:index'), follow=True)
+        content = response.content.decode()
+        self.assertIn('<a href="/inqpal/posts/trending/">Trending</a>', content, f'Trending link not present in header when user is not loged in')
+        self.assertIn('<a href="/inqpal/account/login/">Login</a>', content, 'Login link not present in header when user is not loged in')
+        self.assertIn('<a href="/inqpal/account/signup/">Sign Up</a>', content, 'Sign Up link not present in header when user is not loged in')
+        self.assertIn('<a href="/inqpal/posts/categories/">Categories</a>', content, 'Categories link not present in header when user is not loged in')
+        
+
+        
+        self.client.login(username='testuser', password='TestPassword123')
+        response = self.client.get(reverse('inqpal:index'), follow=True)
+        content = response.content.decode()
+
+        self.assertIn('<a href="/inqpal/posts/trending/">Trending</a>', content, 'trending not present in header when user is loged in')
+        self.assertIn(' <a href="/inqpal/posts/pals/">Pals</a>', content, 'Pals link not present in header when user is loged in')
+        self.assertIn('<a href="/inqpal/account/my_account/">Account</a>', content, 'Account link not present in header when user is loged in')
+        self.assertIn('<a href="/inqpal/posts/categories/">Categories</a>', content, 'Categories link not present in header when user is loged in')
+    
+    def test_redirect_based_on_authentication(self):
+        response = self.client.get(reverse('inqpal:index'), follow=True)
+        self.assertRedirects(response, reverse('inqpal:trending'), "Logged-out user was not redirected to trending page.")
+
+        self.client.login(username='testuser', password='TestPassword123')
+
+        response = self.client.get(reverse('inqpal:index'), follow=True)
+        self.assertRedirects(response, reverse('inqpal:pals'), "Logged-in user was not redirected to pals posts page.")
