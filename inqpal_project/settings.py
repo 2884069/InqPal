@@ -28,7 +28,7 @@ SECRET_KEY = 'n7rpf#ijbwd04@uw%5x__5r=m(eo8!**sl3un7k%0$y1s-kvs#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['turiii.pythonanywhere.com']
+ALLOWED_HOSTS = ['turiii.pythonanywhere.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
