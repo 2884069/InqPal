@@ -1,8 +1,14 @@
+import os
+import tempfile
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
-from inqpal.models import Account,Comment
+from inqpal.models import Account, Category,Comment, Post
 from inqpal.urls import urlpatterns
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.test.utils import override_settings
+
+from inqpal_project import settings
 
 class LoginAndSignUpTests(TestCase):
     def setUp(self):
@@ -160,15 +166,129 @@ class BaseTests(TestCase):
         content = response.content.decode()
 
         self.assertIn('<a href="/inqpal/posts/trending/">Trending</a>', content, 'trending not present in header when user is loged in')
-        self.assertIn(' <a href="/inqpal/posts/pals/">Pals</a>', content, 'Pals link not present in header when user is loged in')
+        self.assertIn('<a href="/inqpal/posts/pals/">Pals</a>', content, 'Pals link not present in header when user is loged in')
         self.assertIn('<a href="/inqpal/account/my_account/">Account</a>', content, 'Account link not present in header when user is loged in')
         self.assertIn('<a href="/inqpal/posts/categories/">Categories</a>', content, 'Categories link not present in header when user is loged in')
     
     def test_redirect_based_on_authentication(self):
         response = self.client.get(reverse('inqpal:index'), follow=True)
-        self.assertRedirects(response, reverse('inqpal:trending'), "Logged-out user was not redirected to trending page.")
+        self.assertRedirects(response, reverse('inqpal:trending'), status_code=302, msg_prefix="Logged out user was not redirected to trending page.")
 
         self.client.login(username='testuser', password='TestPassword123')
 
         response = self.client.get(reverse('inqpal:index'), follow=True)
-        self.assertRedirects(response, reverse('inqpal:pals'), "Logged-in user was not redirected to pals posts page.")
+        self.assertRedirects(response, reverse('inqpal:palsposts'), status_code=302, msg_prefix="Logged in user was not redirected to pals posts page.")
+
+    
+
+class CreatePostTests(TestCase):
+
+
+
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', email='test@example.com', password='TestPassword123')
+        self.account = Account.objects.create(user=self.user, fav_dino='T-Rex')
+        self.client.login(username='testuser', password='TestPassword123')
+
+    def tearDown(self):
+        for post in Post.objects.all():
+            post.delete()
+        for category in Category.objects.all():
+            category.delete()
+        super().tearDown()
+    
+
+    def make_image(self):
+        return SimpleUploadedFile("test_image.jpg", b"test_image", content_type="image/jpeg")
+
+    def make_category(self):
+        image = self.make_image()
+        test_category = Category.objects.get_or_create(name='test_category',description='test_desc',picture=image)[0]
+        test_category.save()
+        return test_category
+    
+    def make_post(self):
+        self.make_category()
+        image = self.make_image()
+        return self.client.post(reverse('inqpal:make_post'), {
+            'image': image,
+            'text': 'test_text',
+            'category': "test_category"
+        })
+        
+    
+    def test_redirect_when_logged_out(self):
+        self.client.logout()
+        response = self.client.get(reverse('inqpal:make_post'))
+        self.assertRedirects(response, f"{reverse('inqpal:login')}?next={reverse('inqpal:make_post')}", status_code=302, msg_prefix="Logged out user was not redirected to login page.")
+
+
+    def test_no_image_chosen(self):
+        response = self.client.post(reverse('inqpal:make_post'), {
+            'category': "test_category",
+            'text': 'test_text',
+        })
+        content = response.content.decode()
+        self.assertIn('Error while processing post please try again', content, 'when image is not sent to the server an error message is not shown')
+
+
+    def test_no_category_chosen(self):
+        image = self.make_image()
+        response = self.client.post(reverse('inqpal:make_post'), {
+            'image': image,
+            'text': 'test_text',
+        })
+        content = response.content.decode()
+        self.assertIn('Error while processing post please try again', content, 'when cateogry is not sent to the server an error message is not shown')
+    
+    def test_no_text_input(self):
+        image = self.make_image()
+        response = self.client.post(reverse('inqpal:make_post'), {
+            'image': image,
+            'category': "test_category",
+        })
+        content = response.content.decode()
+        self.assertIn('Error while processing post please try again', content, 'when text is not sent to the server an error message is not shown')
+
+    def test_name_present(self):
+        response = self.client.get(reverse('inqpal:make_post'))
+        content = response.content.decode()
+        self.assertIn('testuser', content, 'username does not show up on make_post')
+
+    def test_post_is_created(self):
+        post = self.make_post()
+        self.assertTrue(Post.objects.exists() , 'post is not created with valid inputs')
+
+    def test_post_is_added_to_account(self):
+        post = self.make_post()
+        self.assertEqual(self.account, Post.objects.first().creator, 'post is not added to the correct user')
+
+    def test_post_is_added_to_category(self):
+        post = self.make_post()
+        self.assertEqual(Category.objects.first(), Post.objects.first().category, 'post is not added to the correct category')
+
+    def test_post_has_correct_roars_and_comments(self):
+        post = self.make_post()
+        self.assertEqual(0, Post.objects.first().roars.all().count(), 'post has roars when noone has roared it')
+
+    def test_post_has_correct_text(self):
+        post = self.make_post()
+        self.assertEqual('test_text', Post.objects.first().text, 'post has incorrect text')
+
+    def test_post_has_image(self):
+        post = self.make_post()
+        self.assertIn('test_image.jpg', str(Post.objects.first().image), 'post has incorrect image')
+
+    def test_baked_in_text_present(self):
+        response = self.client.get(reverse('inqpal:make_post'))
+        content = response.content.decode()
+        self.assertIn('Create a Post', content, '"Create a Post" does not show up on make_post')
+        self.assertIn('Enter your description', content, '"Enter your description" does not show up on make_post')
+        self.assertIn('Select a Category', content, '"Select a Category" does not show up on make_post')
+        self.assertIn('cancel', content, '"cancel" does not show up on make_post')
+        self.assertIn('post', content, '"post" doespost not show up on make_post')
+    
+    def test_no_image_selected_shows_deafult(self):
+        response = self.client.get(reverse('inqpal:make_post'))
+        content = response.content.decode()
+        self.assertIn('<img id = \'picture_preview\' src = "/static/images/noImageSelected.png"/>', content, 'default image not showing when no image has been slected')

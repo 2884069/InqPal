@@ -1,3 +1,4 @@
+import os
 from django.db import models
 from django.contrib.auth.models import User
 import datetime
@@ -27,6 +28,12 @@ class Category(models.Model):
     description = models.CharField(max_length=DESCRIPTION_MAX_LEN)
     picture = models.ImageField(upload_to='category_images')
 
+    def delete(self):
+        if self.picture:
+            if os.path.isfile(self.picture.path):
+                os.remove(self.picture.path)
+        super().delete()
+
     def __str__(self):
         return self.name
 
@@ -39,6 +46,12 @@ class Post(models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
     roars = models.ManyToManyField(Account,related_name='roared_posts',blank=True)
     date = models.DateField(default=datetime.datetime(2025,1,1))
+
+    def delete(self):
+        if self.image:
+            if os.path.isfile(self.image.path):
+                os.remove(self.image.path)
+        super().delete()
 
     def __str__(self):
         return self.creator.__str__() + ":" + str(self.id)

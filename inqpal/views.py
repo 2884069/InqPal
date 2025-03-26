@@ -223,26 +223,32 @@ def my_account(request):
 
 @login_required
 def make_post(request):
+    failure = False
 
     if request.method == 'POST':
         post_form = PostForm(request.POST)
 
         if post_form.is_valid():
-            post = post_form.save(commit = False)
-            post.image = request.FILES['image']
-            post.creator = request.user.account
-            post.category = Category.objects.get(name = request.POST['category'])
-            post.date = datetime.date.today()
-            post.save()
-            return redirect(reverse('inqpal:my_account'))
+            if 'image' in request.FILES and 'category' in request.POST:
+                post = post_form.save(commit = False)
+                post.image = request.FILES['image']
+                post.creator = request.user.account
+                post.category = Category.objects.get(name = request.POST['category'])
+                post.date = datetime.date.today()
+                post.save()
+                return redirect(reverse('inqpal:my_account'))
+            else:
+                failure = True
 
         else:
             print(post_form.errors)
+            failure = True
     
     else:
         post_form = PostForm()
     
-    return render(request, 'inqpal/make_post.html', context= {'username' : str(request.user.account)})
+
+    return render(request, 'inqpal/make_post.html', context= {'username' : str(request.user.account), 'failure': failure})
 
 
 @login_required
