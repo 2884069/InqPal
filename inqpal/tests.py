@@ -4,6 +4,7 @@ from django.urls import reverse
 from inqpal.models import Account, Category,Comment, Post
 from inqpal.urls import urlpatterns
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.contrib.auth.models import AnonymousUser
 
 
 from inqpal_project import settings
@@ -315,3 +316,23 @@ class DisplayPostTests(TestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertTrue(Comment.objects.filter(text='test comment 123').exists())
+
+    def test_post_roar(self):
+        post = self.make_post()
+        response = self.client.post(reverse('inqpal:trending'), {
+            'post': post.id,
+            'submit':'roar',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(post.roars.count(), 1)
+
+    def test_roar_button_with_account(self):
+        post = self.make_post()
+        response = self.client.get(reverse('inqpal:trending'))
+        self.assertTrue(b"roar_form" in response.content)
+
+    def test_no_roar_button_no_account(self):
+        post = self.make_post()
+        self.client.logout()
+        response = self.client.get(reverse('inqpal:trending'))
+        self.assertFalse(b"roar_form" in response.content)
