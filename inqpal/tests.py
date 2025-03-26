@@ -1,12 +1,10 @@
-import os
-import tempfile
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
 from inqpal.models import Account, Category,Comment, Post
 from inqpal.urls import urlpatterns
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.test.utils import override_settings
+
 
 from inqpal_project import settings
 
