@@ -171,6 +171,13 @@ class BaseTests(TestCase):
 
     
 
+class AddPalTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', email='test@example.com', password='TestPassword123')
+        self.account = Account.objects.create(user=self.user, fav_dino='T-Rex')
+        self.client.login(username='testuser', password='TestPassword123')
+    
+
 class CreatePostTests(TestCase):
 
 
