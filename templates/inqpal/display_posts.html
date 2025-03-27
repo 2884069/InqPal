@@ -39,17 +39,17 @@
                                 <p><form id = 'unroar_form' method="POST" action="{{this_url}}">
                                     {% csrf_token %}
                                     <input type="hidden" name='post' id='what_post' value={{post.post.id}}>
-                                    <input type="submit" name="submit" value="unroar" required="required"> {{post.roars}}
+                                    <button type="submit" name="submit" value="unroar" required="required" id="roar_button"><img src="{% static 'images/unroar.png' %}" class="roar_button_image"></button>{{post.roars}}
                                 </form></p>
                             {% else %}
                                 <p><form id = 'roar_form' method="POST" action="{{this_url}}">
                                     {% csrf_token %}
                                     <input type="hidden" name='post' id='what_post' value={{post.post.id}}>
-                                    <input type="submit" name="submit" value="roar" required="required"> {{post.roars}}
+                                    <button type="submit" name="submit" value="roar" id="roar_button"><img src="{% static 'images/roar.svg' %}" class="roar_button_image"/></button> {{post.roars}}
                                 </form></p>
                             {% endif %}
                         {% else %}
-                            <p>roars: {{post.roars}}</p>
+                            <p><img src="{% static 'images/unroar.png' %}" class="roar_image_unlogged"> {{post.roars}}</p>
                         {% endif %}
                     </div>
                     <hr>
@@ -57,8 +57,17 @@
                         <ul>
                             {% for comment in post.comments %}
                                 <li><div class="comment_display">
-                                    <strong>{{comment.creator}}</strong>
-                                    {{comment.text}}
+                                    <div class="comment_text">
+                                        <strong>{{comment.comment.creator}}</strong>
+                                        {{comment.comment.text}}
+                                    </div>
+                                    {% if comment.mine %}
+                                        <form id = 'delete_comment' method="POST" action="{{this_url}}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name='comment' id='what_comment' value={{comment.comment.id}}>
+                                            <input type="submit" name="submit" value="delete" required="required">
+                                        </form>
+                                    {% endif %}
                                 </div></li>
                             {% endfor %}
                         </ul>
@@ -70,7 +79,7 @@
                             {% csrf_token %}
                             <input type="hidden" name='post' id='what_post' value={{post.post.id}}>
                             {{ form }}
-                            <input type="submit" name = "submit" value = "post" required="required" id = 'comment_button'/>
+                            <button type="submit" name = "submit" value = "post" required="required" id = 'comment_button'><img src="{% static 'images/comment.svg' %}" class="comment_button_image"></button>
                         </form>
                     {% endif %}
                 </div>
