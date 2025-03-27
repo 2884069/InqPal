@@ -38,6 +38,10 @@ def handle_roar_form_post(request):
     post = Post.objects.get(id=request.POST.get('post'))
     post.roars.add(request.user.account)
 
+def handle_unroar_form_post(request):
+    post = Post.objects.get(id=request.POST.get('post'))
+    post.roars.remove(request.user.account)
+
 def index(request):
     if request.user.is_authenticated:
         return redirect('inqpal:palsposts')
@@ -56,6 +60,8 @@ def trending(request,page=1):
             handle_comment_form_post(request)
         elif request.POST.get('submit') == 'roar':
             handle_roar_form_post(request)
+        elif request.POST.get('submit') == 'unroar':
+            handle_unroar_form_post(request)
     
     context_dict['type'] = 'Trending'
     context_dict['this_url'] = reverse('inqpal:trending')
@@ -92,6 +98,8 @@ def pals_posts(request,page=1):
             handle_comment_form_post(request)
         elif request.POST.get('submit') == 'roar':
             handle_roar_form_post(request)
+        elif request.POST.get('submit') == 'unroar':
+            handle_unroar_form_post(request)
     
     context_dict['type'] = 'Pals Posts'
     context_dict['this_url'] = reverse('inqpal:palsposts')
@@ -135,6 +143,8 @@ def show_category(request,category_name,page=1):
             handle_comment_form_post(request)
         elif request.POST.get('submit') == 'roar':
             handle_roar_form_post(request)
+        elif request.POST.get('submit') == 'unroar':
+            handle_unroar_form_post(request)
     
     context_dict['type'] = category_name
     context_dict['this_url'] = reverse('inqpal:show_category', kwargs={'category_name':category_name})
