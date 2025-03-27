@@ -5,6 +5,8 @@ from inqpal.models import Account, Category,Comment, Post
 from inqpal.urls import urlpatterns
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.contrib.auth.models import AnonymousUser
+from django.http import HttpResponse, JsonResponse
+
 
 
 from inqpal_project import settings
@@ -169,6 +171,72 @@ class BaseTests(TestCase):
         response = self.client.get(reverse('inqpal:index'), follow=True)
         self.assertRedirects(response, reverse('inqpal:palsposts'), status_code=302, msg_prefix="Logged in user was not redirected to pals posts page.")
 
+
+
+class AddPalTests(TestCase):   
+    def setUp(self):
+        self.user1 = User.objects.create_user(username='testuser1', password='TestPassword123')
+        self.user2 = User.objects.create_user(username='testuser2', password='TestPassword123')
+
+        self.account1 = Account.objects.create(user=self.user1, fav_dino="T-Rex")
+        self.account2 = Account.objects.create(user=self.user2, fav_dino="Velociraptor")
+
+        self.client.login(username='testuser1', password='TestPassword123')
+
+    def test_watch_pal(self):
+        url = reverse('inqpal:add_pal')
+
+        response = self.client.post(url, {'pal_id': self.account2.id, 'do': 'Watch'}, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, 200, 'not an ajax respone when unwatching pal')
+        self.assertIn('success', response.json(), 'failed to watch pal')
+
+        self.assertTrue(self.account1.friends.filter(id=self.account2.id).exists(), 'added pal is not added to the models infomation')
+
+    def test_unwatch_pal(self):
+        self.account1.friends.add(self.account2)
+
+        url = reverse('inqpal:add_pal')
+
+        response = self.client.post(url, {'pal_id': self.account2.id, 'do': 'Unwatch'}, HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, 200, 'not an ajax respone when unwatching pal')
+        self.assertIn('success', response.json(), 'failed to unwatch pal')
+
+        self.assertFalse(self.account1.friends.filter(id=self.account2.id).exists(), 'added pal in not removed from the models information')
+
+    def test_find_your_pals_section(self):
+        response = self.client.get(reverse('inqpal:add_pal'))
+        content = response.content.decode()
+
+        self.assertIn('<h2 id = \'search_box_title\'>Find Your Pals:</h2>', content, '"Find Your Pals" heading is missing.')
+        self.assertIn('<input id="search_box_input"', content, 'Search input box is missing.')
+        self.assertIn('<input type="reset" id = \'clear_button\' value = \'&#x2b59;\'>', content, 'Clear button is missing.')
+        self.assertIn('<div id = \'add_pal_results\'>', content, 'Results container is missing.')
+
+    def test_csrf_token_present(self):
+        response = self.client.get(reverse('inqpal:add_pal'))
+        content = response.content.decode()
+
+        self.assertIn('<input type="hidden" name="csrfmiddlewaretoken"', content, 'CSRF token is missing from add pal form')
+
+    def test_javascript_variables_and_script(self):
+        response = self.client.get(reverse('inqpal:add_pal'))
+        content = response.content.decode()
+
+        self.assertIn('<script src="/static/js/add_pal.js">', content, 'JavaScript file is not being loaded.')
+
+    def test_search_functionality_ui_elements(self):
+
+        response = self.client.get(reverse('inqpal:add_pal'))
+        content = response.content.decode()
+
+        self.assertIn('<span id="search_box_icon">&#x2315;</span>', content, 'Search box icon is missing.')
+        self.assertIn('<div id = \'search_area\'>', content, 'Search area container is missing.')
+
+    def test_watch_button_presence(self):
+        response = self.client.get(reverse('inqpal:add_pal'))
+        content = response.content.decode()
+
+        self.assertIn('class="watch_button"', content, 'Watch button is missing.')
     
 
 class CreatePostTests(TestCase):
