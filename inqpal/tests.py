@@ -407,7 +407,7 @@ class ShowCategoryTests(TestCase):
         self.assertTrue(b"test post 123" in response.content)
         self.assertTrue(b"test comment 123" in response.content)
 
-class ShowCategoryTests(TestCase):
+class TestPalsPosts(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', email='test@example.com', password='TestPassword123')
         self.account = Account.objects.create(user=self.user, fav_dino='T-Rex')
