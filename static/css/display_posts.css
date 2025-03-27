@@ -103,3 +103,21 @@
 .comment_space {
     height: 20px;
 }
+
+.page_div {
+    width: 100%;
+    margin: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.other_page, .this_page {
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 20px;
+}
+
+.this_page {
+    font-weight: bold;
+}

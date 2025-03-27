@@ -18,6 +18,7 @@ from inqpal.forms import PostForm, UserForm, AccountForm
 from django.contrib import messages
 import datetime
 from django.template.loader import render_to_string
+import math
 
 
 POSTS_PER_PAGE = 20
@@ -43,7 +44,8 @@ def index(request):
     else:
         return redirect('inqpal:trending')
 
-def trending(request,page=0):
+def trending(request,page=1):
+    page -= 1
     context_dict = {}
     form = CommentForm()
     context_dict['form'] = form
@@ -57,6 +59,12 @@ def trending(request,page=0):
     
     context_dict['type'] = 'Trending'
     context_dict['this_url'] = reverse('inqpal:trending')
+
+    number_of_pages = math.ceil(Post.objects.all().count()/POSTS_PER_PAGE)
+    if (number_of_pages > 0):
+        pages = [{'page_number':x,'page_link':reverse('inqpal:trending', kwargs={'page':x})} for x in range(1,number_of_pages+1)]
+        pages[page-1]['this'] = True
+        context_dict['pages'] = pages
 
     post_list = Post.objects.annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
@@ -72,7 +80,8 @@ def trending(request,page=0):
     return render(request, 'inqpal/display_posts.html', context=context_dict)
 
 @login_required
-def pals_posts(request,page=0):
+def pals_posts(request,page=1):
+    page -= 1
     context_dict = {}
     form = CommentForm()
     context_dict['form'] = form
@@ -89,6 +98,12 @@ def pals_posts(request,page=0):
 
     user = request.user
     account = Account.objects.get(user=user)
+
+    number_of_pages = math.ceil(Post.objects.filter(creator__in=account.friends.all()).count()/POSTS_PER_PAGE)
+    if (number_of_pages > 0):
+        pages = [{'page_number':x,'page_link':reverse('inqpal:palsposts', kwargs={'page':x})} for x in range(1,number_of_pages+1)]
+        pages[page-1]['this'] = True
+        context_dict['pages'] = pages
 
     post_list = Post.objects.filter(creator__in=account.friends.all()).annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
@@ -108,7 +123,8 @@ def categories(request):
     context_dict["categories"] = categories
     return render(request,'inqpal/display_categories.html',context=context_dict)
 
-def show_category(request,category_name,page=0):
+def show_category(request,category_name,page=1):
+    page -= 1
     context_dict = {}
     form = CommentForm()
     context_dict['form'] = form
@@ -122,6 +138,12 @@ def show_category(request,category_name,page=0):
     
     context_dict['type'] = category_name
     context_dict['this_url'] = reverse('inqpal:show_category', kwargs={'category_name':category_name})
+
+    number_of_pages = math.ceil(Post.objects.filter(category=Category.objects.get(name=category_name)).count()/POSTS_PER_PAGE)
+    if (number_of_pages > 0):
+        pages = [{'page_number':x,'page_link':reverse('inqpal:show_category', kwargs={'category_name':category_name,'page':x})} for x in range(1,number_of_pages+1)]
+        pages[page-1]['this'] = True
+        context_dict['pages'] = pages
 
     post_list = Post.objects.filter(category=Category.objects.get(name=category_name)).annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
     post_list = [{'post':p,'roars':p.roars.count,'comments':Comment.objects.filter(post=p).order_by('date')} for p in post_list]
