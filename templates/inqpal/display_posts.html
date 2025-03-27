@@ -57,8 +57,17 @@
                         <ul>
                             {% for comment in post.comments %}
                                 <li><div class="comment_display">
-                                    <strong>{{comment.creator}}</strong>
-                                    {{comment.text}}
+                                    <div class="comment_text">
+                                        <strong>{{comment.comment.creator}}</strong>
+                                        {{comment.comment.text}}
+                                    </div>
+                                    {% if comment.mine %}
+                                        <form id = 'delete_comment' method="POST" action="{{this_url}}">
+                                            {% csrf_token %}
+                                            <input type="hidden" name='comment' id='what_comment' value={{comment.comment.id}}>
+                                            <input type="submit" name="submit" value="delete" required="required">
+                                        </form>
+                                    {% endif %}
                                 </div></li>
                             {% endfor %}
                         </ul>

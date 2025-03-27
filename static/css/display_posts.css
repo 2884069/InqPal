@@ -101,7 +101,15 @@
 }
 
 .comment_space {
-    height: 20px;
+    min-height: 20px;
+}
+
+.comment_display {
+    display:flex;
+}
+
+.comment_text {
+    width:75%;
 }
 
 .page_div {
@@ -126,4 +134,8 @@
 
 .page p {
     font-weight: bold;
+}
+
+#delete_comment {
+    margin-left: 15px;
 }
