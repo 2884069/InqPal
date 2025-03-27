@@ -3,6 +3,7 @@
 }
 
 .title_block {
+    font-family: "Poppins", sans-serif;
     text-align: center;
 }
 
@@ -46,6 +47,7 @@
 }
 
 .cat_head > h3 {
+    font-family: "Poppins", sans-serif;
     text-align: center;
     font-size: 27px;
     vertical-align: center;
@@ -58,6 +60,7 @@
 }
 
 .numbers_section {
+    font-family: "Poppins", sans-serif;
     text-align: right;
     margin-right: 10px;
     margin-bottom: 0;

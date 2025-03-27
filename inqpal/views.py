@@ -313,6 +313,8 @@ def edit_profile(request):
         if form.is_valid():
             form.save()
             return redirect(reverse('inqpal:my_account'))
+        else:
+            print(form.errors)
     else:
         form = EditProfileForm(instance = request.user.account)
     return render(request, 'inqpal/edit_profile.html', context = {'form': form})

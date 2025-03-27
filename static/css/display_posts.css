@@ -3,6 +3,7 @@
 }
 
 .title_block {
+    font-family: "Poppins", sans-serif;
     text-align: center;
 }
 
@@ -48,6 +49,7 @@
 }
 
 .post_head > h3 {
+    font-family: "Poppins", sans-serif;
     font-size: 27px;
     vertical-align: center;
     margin:0;
@@ -75,10 +77,12 @@
 }
 
 .post_context > p {
+    font-family: "Poppins", sans-serif;
     margin: 0;
 }
 
 .post_context > a {
+    font-family: "Poppins", sans-serif;
     float: right;
     margin-right: 10px;
 }
@@ -95,6 +99,7 @@
 }
 
 #comment_form {
+    font-family: "Poppins", sans-serif;
     position: absolute;
     bottom: 0;
     margin-bottom: 15px;
@@ -109,6 +114,7 @@
 }
 
 .comment_text {
+    font-family:'Courier New', Courier, monospace;
     width:75%;
 }
 
@@ -153,4 +159,8 @@
     background: none;
     border: none;
     cursor: pointer;
+}
+
+.roar_image_unlogged {
+    height: 25px;
 }

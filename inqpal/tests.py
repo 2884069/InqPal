@@ -459,3 +459,99 @@ class TestPalsPosts(TestCase):
         response = self.client.get(reverse('inqpal:show_category', kwargs={'category_name':'test_category'}))
         self.assertTrue(b"test post 123" in response.content)
         self.assertTrue(b"test comment 123" in response.content)
+        
+class MyAccountTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', email='test@example.com', password='TestPassword123')
+        self.account = Account.objects.create(user=self.user, fav_dino='T-Rex')
+        
+        self.category = Category.objects.create(name="Test Category", description="A test category", picture="path/to/picture")
+        for i in range(10):
+            Post.objects.create(creator=self.account, text=f"Post {i}", category=self.category)
+            
+        self.watchers = []
+        for i in range(1,6):
+            watcher_user = User.objects.create_user(username=f"watcher{i}", password=f"watcher{i}password")
+            watcher_account = Account.objects.create(user=watcher_user, fav_dino=f"FavDino{i}")
+            self.watchers.append(watcher_account)
+            
+        for watcher in self.watchers:
+            watcher.friends.add(self.account)
+            
+        self.friends = []
+        for i in range(1,4):
+            friend_user = User.objects.create_user(username=f"friend{i}", password=f"friend{i}password")
+            friend_account = Account.objects.create(user=friend_user, fav_dino=f"FavDino{i}")
+            self.friends.append(friend_account)
+            
+        for friend in self.friends:
+            self.account.friends.add(friend)
+            
+        self.client.login(username='testuser', password='TestPassword123')
+    
+    def test_my_account_page_can_be_accessed(self):
+        response = self.client.get(reverse("inqpal:my_account"))
+        self.assertEqual(response.status_code, 200)
+        
+    def test_redirect_to_login_page_if_not_logged_in(self):
+        self.client.logout()
+        response = self.client.get(reverse("inqpal:my_account"))
+        expectedURL = reverse("inqpal:login") + f"?next={reverse('inqpal:my_account')}"
+        self.assertRedirects(response, expectedURL)
+        
+    def test_correctly_shows_user_data(self):
+        response = self.client.get(reverse("inqpal:my_account"))
+        self.assertContains(response, self.user.username)
+        self.assertContains(response, self.account.fav_dino)
+        self.assertContains(response, f"{Post.objects.filter(creator=self.account).count()} posts")
+        self.assertContains(response, f"{self.account.watchers.count()} watchers")
+        self.assertContains(response, f"{self.account.friends.count()} pals")
+    
+    def test_paging_functionality(self):
+        response = self.client.get(reverse("inqpal:my_account"),{"page": 1})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("posts", response.context)
+        
+    def test_delete_post_functionality(self):
+        post = Post.objects.first()
+        response = self.client.post(reverse("inqpal:my_account"), {"selected_posts": [post.id]})
+        selectedPostExists = Post.objects.filter(id=post.id).exists()
+        self.assertFalse(selectedPostExists) 
+        
+class EditProfileTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', email='test@example.com', password='TestPassword123')
+        self.account = Account.objects.create(user=self.user, fav_dino='T-Rex')
+    
+    def test_redirect_to_login_page_if_logged_in(self):
+        response = self.client.get(reverse("inqpal:edit_profile"))
+        expectedURL = reverse("inqpal:login") + f"?next={reverse('inqpal:edit_profile')}"
+        self.assertRedirects(response, expectedURL)
+        
+    def test_edit_with_valid_input(self):
+        self.client.login(username="testuser", password="testpassword")
+        response = self.client.post(reverse("inqpal:edit_profile"), {"fav_dino": "Iguanodon",})
+        self.account.refresh_from_db()
+        self.assertEqual(self.account.fav_dino, "Iguanodon")
+        self.assertRedirects(response, reverse("inqpal:my_account"))
+    
+    def test_edit_with_invalid_input(self):
+        self.client.login(username="testuser", password="testpassword")
+        response = self.client.post(reverse("inqpal:edit_profile"), {"fav_dino": "",})
+        self.account.refresh_from_db()
+        self.assertNotEqual(self.account.fav_dino, "")
+        
+    def test_edit_with_correct_image_type(self):
+        self.client.login(username="testuser", password="testpassword")
+        image = SimpleUploadedFile("test_image.jpg", b"random_data", content_type="image/jpeg")
+        response = self.client.post(reverse("inqpal:edit_profile"), {"fav_dino": "Iguanodon", "picture": image,})
+        self.account.refresh_from_db()
+        self.assertTrue(self.account.picture.name.startswith("profile_images/test_image"))
+        self.assertRedirects(response, reverse("inqpal:my_account"))
+
+    def test_edit_with_incorrect_image_type(self):
+        self.client.login(username="testuser", password="testpassword")
+        invalidFile = SimpleUploadedFile("test_file.txt", b"random data", content_type="text/plain")
+        response = self.client.post(reverse("inqpal:edit_profile"), {"fav_dino": "Iguanodon", "picture": invalidFile,})
+        self.account.refresh_from_db()
+        self.assertEqual(self.account.picture.name, "noImageSelected.png")
