@@ -393,15 +393,61 @@ class ShowCategoryTests(TestCase):
         test_post.save()
         return test_post
     
-    def test_display_error_no_posts(self):
+    def test_display_error_no_posts_when_wrong_cat(self):
         self.make_other_category()
         self.make_post()
         response = self.client.get(reverse('inqpal:show_category', kwargs={'category_name':'test_category_2'}))
         self.assertTrue(b"Error: No posts to show!" in response.content)
 
-    def test_display_post_and_comment(self):
+    def test_display_post_when_in_cat(self):
         self.make_other_category()
         post = self.make_post()
+        Comment.objects.get_or_create(post=post,creator=self.account,text="test comment 123")
+        response = self.client.get(reverse('inqpal:show_category', kwargs={'category_name':'test_category'}))
+        self.assertTrue(b"test post 123" in response.content)
+        self.assertTrue(b"test comment 123" in response.content)
+
+class ShowCategoryTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', email='test@example.com', password='TestPassword123')
+        self.account = Account.objects.create(user=self.user, fav_dino='T-Rex')
+        self.client.login(username='testuser', password='TestPassword123')
+
+    def make_accounts(self):
+        user1 = User.objects.create_user(username='testuser2', email='test2@example.com', password='TestPassword123')
+        account1 = Account.objects.create(user=user1, fav_dino='Brontosaurus')
+        user2 = User.objects.create_user(username='testuser3', email='test3@example.com', password='TestPassword123')
+        account2 = Account.objects.create(user=user2, fav_dino='Argentinasaurus')
+        return [account1,account2]
+
+    def make_category(self):
+        image = "chernobylFox.jpg"
+        test_category = Category.objects.get_or_create(name='test_category',description='test_desc',picture=image)[0]
+        test_category.save()
+        return test_category
+    
+    def make_post(self,account):
+        category = self.make_category()
+        image = "chernobylFox.jpg"
+        test_post = Post.objects.get_or_create(
+            creator = account,
+            image=image,
+            text='test post 123',
+            category=category)[0]
+        test_post.save()
+        return test_post
+    
+    def test_display_error_no_posts_when_not_pals(self):
+        accounts = self.make_accounts()
+        self.account.friends.add(accounts[0])
+        self.make_post(accounts[1])
+        response = self.client.get(reverse('inqpal:palsposts'))
+        self.assertTrue(b"Error: No posts to show!" in response.content)
+
+    def test_display_post_when_pals(self):
+        accounts = self.make_accounts()
+        self.account.friends.add(accounts[0])
+        post = self.make_post(accounts[0])
         Comment.objects.get_or_create(post=post,creator=self.account,text="test comment 123")
         response = self.client.get(reverse('inqpal:show_category', kwargs={'category_name':'test_category'}))
         self.assertTrue(b"test post 123" in response.content)
