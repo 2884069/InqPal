@@ -34,8 +34,8 @@ class LoginAndSignUpTests(TestCase):
             'confirmation_password': 'WrongPass123',
             'fav_dino': 'Stegosaurus'
         })
-        self.assertEqual(response.status_code, 302)
-        self.assertContains(response, "", status_code=302)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "The passwords you entered do not match.", status_code=200)
         self.assertFalse(User.objects.filter(username='user2').exists())
 
     def test_login_valid(self):

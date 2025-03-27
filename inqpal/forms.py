@@ -27,15 +27,15 @@ class UserForm(forms.ModelForm):
 
         self.fields['password'].validators.append(validate_password)
 
-    def clean_password_confirmation(self):
-        cleaned_data = self.cleaned_data
+    def clean(self):
+        cleaned_data = super().clean()
         password = cleaned_data.get("password")
         confirmation_password = cleaned_data.get("confirmation_password")
 
         if password and confirmation_password and password != confirmation_password:
-            raise forms.ValidationError("The passwords you entered do not match.")
+            self.add_error('confirmation_password', "The passwords you entered do not match.")
         
-        return confirmation_password
+        return cleaned_data
 
 class AccountForm(forms.ModelForm):
     fav_dino = forms.CharField(widget=forms.TextInput(attrs={'class': 'form'}))
