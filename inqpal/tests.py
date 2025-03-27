@@ -385,6 +385,20 @@ class DisplayPostTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(Comment.objects.filter(text='test comment 123').exists())
 
+    def test_post_delete_comment(self):
+        post = self.make_post()
+        self.client.post(reverse('inqpal:trending'), {
+            'post': post.id,
+            'submit':'post',
+            'text':'test comment 123'
+        })
+        response = self.client.post(reverse('inqpal:trending'), {
+            'comment': Comment.objects.get(text='test comment 123').id,
+            'submit':'delete',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(Comment.objects.filter(text='test comment 123').exists())
+
     def test_post_roar(self):
         post = self.make_post()
         response = self.client.post(reverse('inqpal:trending'), {
@@ -393,6 +407,19 @@ class DisplayPostTests(TestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(post.roars.count(), 1)
+    
+    def test_post_roar(self):
+        post = self.make_post()
+        self.client.post(reverse('inqpal:trending'), {
+            'post': post.id,
+            'submit':'roar',
+        })
+        response = self.client.post(reverse('inqpal:trending'), {
+            'post': post.id,
+            'submit':'unroar',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(post.roars.count(), 0)
 
     def test_roar_button_with_account(self):
         self.make_post()
