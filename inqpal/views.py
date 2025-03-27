@@ -46,44 +46,45 @@ def handle_unroar_form_post(request):
     post = Post.objects.get(id=request.POST.get('post'))
     post.roars.remove(request.user.account)
 
-def index(request):
-    if request.user.is_authenticated:
-        return redirect('inqpal:palsposts')
-    else:
-        return redirect('inqpal:trending')
+def handle_display_post_request(request):
+    if request.POST.get('submit') == 'post':
+        handle_comment_form_post(request)
+    elif request.POST.get('submit') == 'delete':
+        handle_comment_delete_post(request)
+    elif request.POST.get('submit') == 'roar':
+        handle_roar_form_post(request)
+    elif request.POST.get('submit') == 'unroar':
+        handle_unroar_form_post(request)
 
-def trending(request,page=1):
-    page -= 1
+def make_context_dict_display_post(request,page,posts,url_str,url_kwargs=None):
     context_dict = {}
+    context_dict['logged_in'] = request.user.is_authenticated
+    if url_kwargs:
+        context_dict['this_url'] = reverse(url_str, kwargs={'category_name':url_kwargs})
+    else:
+        context_dict['this_url'] = reverse(url_str)
+
+    # set up comment form
     form = CommentForm()
     context_dict['form'] = form
-    context_dict['logged_in'] = request.user.is_authenticated
 
-    if request.method == "POST":
-        if request.POST.get('submit') == 'post':
-            handle_comment_form_post(request)
-        elif request.POST.get('submit') == 'delete':
-            handle_comment_delete_post(request)
-        elif request.POST.get('submit') == 'roar':
-            handle_roar_form_post(request)
-        elif request.POST.get('submit') == 'unroar':
-            handle_unroar_form_post(request)
-    
-    context_dict['type'] = 'Trending'
-    context_dict['this_url'] = reverse('inqpal:trending')
-
-    number_of_pages = math.ceil(Post.objects.all().count()/POSTS_PER_PAGE)
+    # sets up pages
+    number_of_pages = math.ceil(posts.count()/POSTS_PER_PAGE)
     if (number_of_pages > 0):
-        pages = [{'page_number':x,'page_link':reverse('inqpal:trending', kwargs={'page':x})} for x in range(1,number_of_pages+1)]
+        if url_kwargs:
+            pages = [{'page_number':x,'page_link':reverse(url_str, kwargs={'category_name':url_kwargs,'page':x})} for x in range(1,number_of_pages+1)]
+        else:
+            pages = [{'page_number':x,'page_link':reverse(url_str, kwargs={'page':x})} for x in range(1,number_of_pages+1)]
         pages[page]['this'] = True
         context_dict['pages'] = pages
 
-    post_list = Post.objects.annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
+    # creates dictionary of posts and comments
+    post_list = posts.annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
     if context_dict['logged_in']:
         post_list = [{'post':p,'roars':p.roars.count,'comments':[{'comment':c,'mine':c.creator == request.user.account} for c in Comment.objects.filter(post=p).order_by('date')]} for p in post_list]
     else:
         post_list = [{'post':p,'roars':p.roars.count,'comments':[{'comment':c} for c in Comment.objects.filter(post=p).order_by('date')]} for p in post_list]
-    
+
     # if logged in, checks which posts you've already roared
     if request.user.is_authenticated:
         account = request.user.account
@@ -92,50 +93,37 @@ def trending(request,page=1):
                 p['roared'] = True
 
     context_dict['posts'] = post_list
+
+    return context_dict
+
+def index(request):
+    if request.user.is_authenticated:
+        return redirect('inqpal:palsposts')
+    else:
+        return redirect('inqpal:trending')
+
+def trending(request,page=1):
+
+    if request.method == "POST":
+        handle_display_post_request(request)
+    
+    context_dict = make_context_dict_display_post(request,page-1,Post.objects,'inqpal:trending')
+    context_dict['type'] = 'Trending'
+
     return render(request, 'inqpal/display_posts.html', context=context_dict)
 
 @login_required
 def pals_posts(request,page=1):
-    page -= 1
-    context_dict = {}
-    form = CommentForm()
-    context_dict['form'] = form
-    context_dict['logged_in'] = True
 
     if request.method == "POST":
-        if request.POST.get('submit') == 'post':
-            handle_comment_form_post(request)
-        elif request.POST.get('submit') == 'delete':
-            handle_comment_delete_post(request)
-        elif request.POST.get('submit') == 'roar':
-            handle_roar_form_post(request)
-        elif request.POST.get('submit') == 'unroar':
-            handle_unroar_form_post(request)
-    
-    context_dict['type'] = 'Pals Posts'
-    context_dict['this_url'] = reverse('inqpal:palsposts')
+        handle_display_post_request(request)
 
     user = request.user
     account = Account.objects.get(user=user)
 
-    number_of_pages = math.ceil(Post.objects.filter(creator__in=account.friends.all()).count()/POSTS_PER_PAGE)
-    if (number_of_pages > 0):
-        pages = [{'page_number':x,'page_link':reverse('inqpal:palsposts', kwargs={'page':x})} for x in range(1,number_of_pages+1)]
-        pages[page]['this'] = True
-        context_dict['pages'] = pages
+    context_dict = make_context_dict_display_post(request,page-1,Post.objects.filter(creator__in=account.friends.all()),'inqpal:palsposts')
+    context_dict['type'] = 'Pals Posts'
 
-    post_list = Post.objects.filter(creator__in=account.friends.all()).annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
-    if context_dict['logged_in']:
-        post_list = [{'post':p,'roars':p.roars.count,'comments':[{'comment':c,'mine':c.creator == request.user.account} for c in Comment.objects.filter(post=p).order_by('date')]} for p in post_list]
-    else:
-        post_list = [{'post':p,'roars':p.roars.count,'comments':[{'comment':c} for c in Comment.objects.filter(post=p).order_by('date')]} for p in post_list]
-    
-    # Checks which posts you've already roared
-    for p in post_list:
-        if p['post'].roars.filter(id=account.id).exists():
-            p['roared'] = True
-    
-    context_dict['posts'] = post_list
     return render(request, 'inqpal/display_posts.html', context=context_dict)
 
 def categories(request):
@@ -146,45 +134,13 @@ def categories(request):
     return render(request,'inqpal/display_categories.html',context=context_dict)
 
 def show_category(request,category_name,page=1):
-    page -= 1
-    context_dict = {}
-    form = CommentForm()
-    context_dict['form'] = form
-    context_dict['logged_in'] = request.user.is_authenticated
 
     if request.method == "POST":
-        if request.POST.get('submit') == 'post':
-            handle_comment_form_post(request)
-        elif request.POST.get('submit') == 'delete':
-            handle_comment_delete_post(request)
-        elif request.POST.get('submit') == 'roar':
-            handle_roar_form_post(request)
-        elif request.POST.get('submit') == 'unroar':
-            handle_unroar_form_post(request)
-    
+        handle_display_post_request(request)
+
+    context_dict = make_context_dict_display_post(request,page-1,Post.objects.filter(category=Category.objects.get(name=category_name)),'inqpal:show_category',category_name)
     context_dict['type'] = category_name
-    context_dict['this_url'] = reverse('inqpal:show_category', kwargs={'category_name':category_name})
 
-    number_of_pages = math.ceil(Post.objects.filter(category=Category.objects.get(name=category_name)).count()/POSTS_PER_PAGE)
-    if (number_of_pages > 0):
-        pages = [{'page_number':x,'page_link':reverse('inqpal:show_category', kwargs={'category_name':category_name,'page':x})} for x in range(1,number_of_pages+1)]
-        pages[page]['this'] = True
-        context_dict['pages'] = pages
-
-    post_list = Post.objects.filter(category=Category.objects.get(name=category_name)).annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
-    if context_dict['logged_in']:
-        post_list = [{'post':p,'roars':p.roars.count,'comments':[{'comment':c,'mine':c.creator == request.user.account} for c in Comment.objects.filter(post=p).order_by('date')]} for p in post_list]
-    else:
-        post_list = [{'post':p,'roars':p.roars.count,'comments':[{'comment':c} for c in Comment.objects.filter(post=p).order_by('date')]} for p in post_list]
-    
-    # if logged in, checks which posts you've already roared
-    if context_dict['logged_in']:
-        account = request.user.account
-        for p in post_list:
-            if p['post'].roars.filter(id=account.id).exists():
-                p['roared'] = True
-    
-    context_dict['posts'] = post_list
     return render(request, 'inqpal/display_posts.html', context=context_dict)
 
 def signup(request):
