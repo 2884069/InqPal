@@ -19,6 +19,7 @@ from django.contrib import messages
 import datetime
 from django.template.loader import render_to_string
 import math
+from django.core.paginator import Paginator
 
 
 POSTS_PER_PAGE = 10
@@ -237,7 +238,11 @@ def my_account(request):
         messages.error(request, "Your account profile does not exist. Please complete your registration.")
         return redirect(reverse('inqpal:register'))
     
-    posts = Post.objects.filter(creator=account).order_by('-date')[:3]
+    all_posts = Post.objects.filter(creator=account).order_by('-date')
+    paginator = Paginator(all_posts, 3)
+    page_number = request.GET.get('page', 1)
+    posts = paginator.get_page(page_number)
+    
     if request.method == "POST":
         selected_posts = request.POST.getlist('selected_posts')
         Post.objects.filter(id__in=selected_posts).delete()

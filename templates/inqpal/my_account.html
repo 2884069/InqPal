@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block body_block %}
-<div class="mainDiv">
+<div class = "mainDiv">
     <div class = "imagePart">
         {% if user.account.picture %}
             <img src="{{ user.account.picture.url }}" alt="Profile Picture">
@@ -60,10 +60,26 @@
                 </div>
             {% endfor %}
         </div>
+        
+        <div class="pagination">
+            {% if posts.has_previous %}
+                <a href="?page=1">First page</a>
+                <a href="?page={{ posts.previous_page_number }}">Previous page</a>
+            {% endif %}
+        
+            <span>Page {{ posts.number }} of {{ posts.paginator.num_pages }}</span>
+        
+            {% if posts.has_next %}
+                <a href="?page={{ posts.next_page_number }}">Next page</a>
+                <a href="?page={{ posts.paginator.num_pages }}">Last page</a>
+            {% endif %}
+        </div>
+
         <div class="bottomButtons">
             <button class="createPostBtn" type="button" onclick="window.location.href = '{% url 'inqpal:make_post' %}'">Create a Post</button>
             <button class="deletePostBtn" type="submit" title = "Tick checkbox to delete a post">Delete a Post</button>
         </div>
     </form>
 </div>
+
 {% endblock %}
