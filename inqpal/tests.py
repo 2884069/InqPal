@@ -302,7 +302,7 @@ class DisplayPostTests(TestCase):
         test_post = Post.objects.get_or_create(
             creator = self.account,
             image=image,
-            text='test_text',
+            text='test post 123',
             category=category)[0]
         test_post.save()
         return test_post
@@ -327,12 +327,23 @@ class DisplayPostTests(TestCase):
         self.assertEqual(post.roars.count(), 1)
 
     def test_roar_button_with_account(self):
-        post = self.make_post()
+        self.make_post()
         response = self.client.get(reverse('inqpal:trending'))
         self.assertTrue(b"roar_form" in response.content)
 
     def test_no_roar_button_no_account(self):
-        post = self.make_post()
+        self.make_post()
         self.client.logout()
         response = self.client.get(reverse('inqpal:trending'))
         self.assertFalse(b"roar_form" in response.content)
+
+    def test_display_error_no_posts(self):
+        response = self.client.get(reverse('inqpal:trending'))
+        self.assertTrue(b"Error: No posts to show!" in response.content)
+
+    def test_display_post_and_comment(self):
+        post = self.make_post()
+        Comment.objects.get_or_create(post=post,creator=self.account,text="test comment 123")
+        response = self.client.get(reverse('inqpal:trending'))
+        self.assertTrue(b"test post 123" in response.content)
+        self.assertTrue(b"test comment 123" in response.content)
