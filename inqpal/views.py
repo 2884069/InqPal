@@ -2,6 +2,7 @@ from inqpal import models
 from inqpal.models import Account,Comment,Post,Category
 from inqpal.forms import PostForm, UserForm, AccountForm, CommentForm, EditProfileForm
 
+import datetime
 from django import forms
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -13,13 +14,11 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render,redirect
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django import forms
 from inqpal.forms import PostForm, UserForm, AccountForm
 from django.contrib import messages
-import datetime
 from django.template.loader import render_to_string
-import math
 from django.core.paginator import Paginator
+import math
 
 
 POSTS_PER_PAGE = 10
