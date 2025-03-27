@@ -66,7 +66,7 @@ class EditProfileForm(forms.ModelForm):
         picture = self.cleaned_data.get('picture')
         if picture:
             allowed_image_types = ['image/jpeg', 'image/png', 'image/gif']
-            if picture.content_type not in allowed_image_types:
+            if hasattr(picture, 'content_type') and picture.content_type not in allowed_image_types:
                 raise forms.ValidationError("Only JPG, PNG and GIF images are allowed")
         
             maximum_size = 10 * 1024 * 1024
