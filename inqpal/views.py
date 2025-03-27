@@ -263,7 +263,6 @@ def make_post(request):
 
 @login_required
 def edit_profile(request):
-    
     if request.method == 'POST':
         form = EditProfileForm(request.POST, request.FILES, instance = request.user.account)
         if form.is_valid():
