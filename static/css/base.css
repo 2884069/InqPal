@@ -3,6 +3,7 @@
     overflow: hidden;
     padding: 0px 20px;
     font-family: "Poppins", sans-serif;
+    width: 100%;
 }
 
 #header_name {
@@ -25,6 +26,7 @@
 #header_links {
     padding: 30px;
     float: right;
+    display:flex;
 }
 
 #header_links a {
@@ -48,4 +50,19 @@
 
 .body {
     background-color: #FEF5E7;
+}
+
+@media screen and (max-width: 1000px) {
+    #header_links {   
+      float: none;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100%;
+      justify-content: center;
+    }
+}
+@media screen and (max-width: 650px) {
+    #header_links {   
+        flex-direction: column;
+      }
 }

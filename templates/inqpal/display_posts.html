@@ -74,5 +74,18 @@
         {% else %}
             <strong>Error: No posts to show!</strong>
         {% endif %}
+        <div class="page_div">
+            {% for page in pages %}
+                {% if page.this %}
+                    <div class="page">
+                        <p>{{ page.page_number }}</p>
+                    </div>
+                {% else %}
+                    <div class="page">
+                        <a href="{{ page.page_link }}">{{ page.page_number }}</a>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

@@ -6,6 +6,9 @@
 {% endblock %}
 
 {% block body_block %}
+{% if failure %}
+<p>Error while processing post please try again</p>
+{% endif %}
 <h1>Create a Post</h1>
 <h2>{{ username }}</h2>
 <form id = 'post_form' method="POST" action="{% url 'inqpal:make_post' %}" enctype="multipart/form-data">
