@@ -59,3 +59,20 @@ class EditProfileForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = ('fav_dino', 'picture')
+    
+    picture = forms.ImageField(required=False)
+    
+    def clean_picture(self):
+        picture = self.cleaned_data.get('picture')
+        if picture:
+            allowed_image_types = ['image/jpeg', 'image/png', 'image/gif']
+            if picture.content_type not in allowed_image_types:
+                raise forms.ValidationError("Only JPG, PNG and GIF images are allowed")
+        
+            maximum_size = 10 * 1024 * 1024
+            if picture.size > maximum_size:
+                raise forms.ValidationError("Image is too large, it has to be less than 10MB")
+        return picture
+        
+        
+            

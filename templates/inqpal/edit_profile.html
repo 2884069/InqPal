@@ -12,12 +12,28 @@
     <div class = "formPart">
         <label for = "favDinosaur">Favourite Dinosaur</label>
         {{ form.fav_dino}}
+        {% if form.fav_dino.errors %}
+            <ul class="error-list">
+                {% for error in form.fav_dino.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
+
     <div class = "formPart">
         <label for = "picture">Profile Picture</label>
         <div class = "currentPicture">
             {{ form.picture}}
         </div>
+        {% if form.picture.errors %}
+            <ul class="error-list">
+                {% for error in form.picture.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <p class = "uploadNotice">Only JPG, PNG and GIF images are allowed and its size must be less than 10MB</p>
     </div>
 
     <button type = "submit">Save changes</button>
