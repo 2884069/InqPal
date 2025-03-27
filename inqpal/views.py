@@ -79,7 +79,10 @@ def trending(request,page=1):
         context_dict['pages'] = pages
 
     post_list = Post.objects.annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
-    post_list = [{'post':p,'roars':p.roars.count,'comments':[{'comment':c,'mine':c.creator == request.user.account} for c in Comment.objects.filter(post=p).order_by('date')]} for p in post_list]
+    if context_dict['logged_in']:
+        post_list = [{'post':p,'roars':p.roars.count,'comments':[{'comment':c,'mine':c.creator == request.user.account} for c in Comment.objects.filter(post=p).order_by('date')]} for p in post_list]
+    else:
+        post_list = [{'post':p,'roars':p.roars.count,'comments':[{'comment':c} for c in Comment.objects.filter(post=p).order_by('date')]} for p in post_list]
     
     # if logged in, checks which posts you've already roared
     if request.user.is_authenticated:
@@ -122,7 +125,10 @@ def pals_posts(request,page=1):
         context_dict['pages'] = pages
 
     post_list = Post.objects.filter(creator__in=account.friends.all()).annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
-    post_list = [{'post':p,'roars':p.roars.count,'comments':[{'comment':c,'mine':c.creator == request.user.account} for c in Comment.objects.filter(post=p).order_by('date')]} for p in post_list]
+    if context_dict['logged_in']:
+        post_list = [{'post':p,'roars':p.roars.count,'comments':[{'comment':c,'mine':c.creator == request.user.account} for c in Comment.objects.filter(post=p).order_by('date')]} for p in post_list]
+    else:
+        post_list = [{'post':p,'roars':p.roars.count,'comments':[{'comment':c} for c in Comment.objects.filter(post=p).order_by('date')]} for p in post_list]
     
     # Checks which posts you've already roared
     for p in post_list:
@@ -166,7 +172,10 @@ def show_category(request,category_name,page=1):
         context_dict['pages'] = pages
 
     post_list = Post.objects.filter(category=Category.objects.get(name=category_name)).annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
-    post_list = [{'post':p,'roars':p.roars.count,'comments':[{'comment':c,'mine':c.creator == request.user.account} for c in Comment.objects.filter(post=p).order_by('date')]} for p in post_list]
+    if context_dict['logged_in']:
+        post_list = [{'post':p,'roars':p.roars.count,'comments':[{'comment':c,'mine':c.creator == request.user.account} for c in Comment.objects.filter(post=p).order_by('date')]} for p in post_list]
+    else:
+        post_list = [{'post':p,'roars':p.roars.count,'comments':[{'comment':c} for c in Comment.objects.filter(post=p).order_by('date')]} for p in post_list]
     
     # if logged in, checks which posts you've already roared
     if context_dict['logged_in']:
