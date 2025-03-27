@@ -387,13 +387,10 @@ class DisplayPostTests(TestCase):
 
     def test_post_delete_comment(self):
         post = self.make_post()
-        self.client.post(reverse('inqpal:trending'), {
-            'post': post.id,
-            'submit':'post',
-            'text':'test comment 123'
-        })
+        comment = Comment.objects.get_or_create(post=post,text='test comment 123',creator=self.account)[0]
+        comment.save()
         response = self.client.post(reverse('inqpal:trending'), {
-            'comment': Comment.objects.get(text='test comment 123').id,
+            'comment': comment.id,
             'submit':'delete',
         })
         self.assertEqual(response.status_code, 200)
@@ -410,10 +407,7 @@ class DisplayPostTests(TestCase):
     
     def test_post_roar(self):
         post = self.make_post()
-        self.client.post(reverse('inqpal:trending'), {
-            'post': post.id,
-            'submit':'roar',
-        })
+        post.roars.add(self.account)
         response = self.client.post(reverse('inqpal:trending'), {
             'post': post.id,
             'submit':'unroar',
