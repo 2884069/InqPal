@@ -348,7 +348,7 @@ class DisplayPostTests(TestCase):
         self.assertTrue(b"test post 123" in response.content)
         self.assertTrue(b"test comment 123" in response.content)
 
-class DisplayCategoryTests(TestCase):
+class CategoriesTests(TestCase):
     def make_category(self):
         image = "chernobylFox.jpg"
         test_category = Category.objects.get_or_create(name='test_category',description='test_desc',picture=image)[0]
@@ -363,3 +363,46 @@ class DisplayCategoryTests(TestCase):
         self.make_category()
         response = self.client.get(reverse('inqpal:categories'))
         self.assertTrue(b"test_category" in response.content)
+
+class ShowCategoryTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', email='test@example.com', password='TestPassword123')
+        self.account = Account.objects.create(user=self.user, fav_dino='T-Rex')
+        self.client.login(username='testuser', password='TestPassword123')
+
+    def make_category(self):
+        image = "chernobylFox.jpg"
+        test_category = Category.objects.get_or_create(name='test_category',description='test_desc',picture=image)[0]
+        test_category.save()
+        return test_category
+    
+    def make_other_category(self):
+        image = "chernobylFox.jpg"
+        test_category = Category.objects.get_or_create(name='test_category_2',description='test_desc',picture=image)[0]
+        test_category.save()
+        return test_category
+    
+    def make_post(self):
+        category = self.make_category()
+        image = "chernobylFox.jpg"
+        test_post = Post.objects.get_or_create(
+            creator = self.account,
+            image=image,
+            text='test post 123',
+            category=category)[0]
+        test_post.save()
+        return test_post
+    
+    def test_display_error_no_posts(self):
+        self.make_other_category()
+        self.make_post()
+        response = self.client.get(reverse('inqpal:show_category', kwargs={'category_name':'test_category_2'}))
+        self.assertTrue(b"Error: No posts to show!" in response.content)
+
+    def test_display_post_and_comment(self):
+        self.make_other_category()
+        post = self.make_post()
+        Comment.objects.get_or_create(post=post,creator=self.account,text="test comment 123")
+        response = self.client.get(reverse('inqpal:show_category', kwargs={'category_name':'test_category'}))
+        self.assertTrue(b"test post 123" in response.content)
+        self.assertTrue(b"test comment 123" in response.content)
