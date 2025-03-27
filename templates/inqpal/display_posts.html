@@ -77,11 +77,11 @@
         <div class="page_div">
             {% for page in pages %}
                 {% if page.this %}
-                    <div class="this_page">
+                    <div class="page">
                         <p>{{ page.page_number }}</p>
                     </div>
                 {% else %}
-                    <div class="other_page">
+                    <div class="page">
                         <a href="{{ page.page_link }}">{{ page.page_number }}</a>
                     </div>
                 {% endif %}

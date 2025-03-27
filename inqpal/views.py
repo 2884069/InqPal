@@ -21,7 +21,7 @@ from django.template.loader import render_to_string
 import math
 
 
-POSTS_PER_PAGE = 20
+POSTS_PER_PAGE = 10
 
 def handle_comment_form_post(request):
     comment_form = CommentForm(request.POST)
@@ -63,7 +63,7 @@ def trending(request,page=1):
     number_of_pages = math.ceil(Post.objects.all().count()/POSTS_PER_PAGE)
     if (number_of_pages > 0):
         pages = [{'page_number':x,'page_link':reverse('inqpal:trending', kwargs={'page':x})} for x in range(1,number_of_pages+1)]
-        pages[page-1]['this'] = True
+        pages[page]['this'] = True
         context_dict['pages'] = pages
 
     post_list = Post.objects.annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
@@ -102,7 +102,7 @@ def pals_posts(request,page=1):
     number_of_pages = math.ceil(Post.objects.filter(creator__in=account.friends.all()).count()/POSTS_PER_PAGE)
     if (number_of_pages > 0):
         pages = [{'page_number':x,'page_link':reverse('inqpal:palsposts', kwargs={'page':x})} for x in range(1,number_of_pages+1)]
-        pages[page-1]['this'] = True
+        pages[page]['this'] = True
         context_dict['pages'] = pages
 
     post_list = Post.objects.filter(creator__in=account.friends.all()).annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]
@@ -142,7 +142,7 @@ def show_category(request,category_name,page=1):
     number_of_pages = math.ceil(Post.objects.filter(category=Category.objects.get(name=category_name)).count()/POSTS_PER_PAGE)
     if (number_of_pages > 0):
         pages = [{'page_number':x,'page_link':reverse('inqpal:show_category', kwargs={'category_name':category_name,'page':x})} for x in range(1,number_of_pages+1)]
-        pages[page-1]['this'] = True
+        pages[page]['this'] = True
         context_dict['pages'] = pages
 
     post_list = Post.objects.filter(category=Category.objects.get(name=category_name)).annotate(num_roars=Count("roars")).order_by("-num_roars")[POSTS_PER_PAGE*page:POSTS_PER_PAGE*(page+1)]

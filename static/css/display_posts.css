@@ -110,14 +110,20 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    align-items:first baseline;
 }
 
-.other_page, .this_page {
+.page {
     margin-left: 5px;
     margin-right: 5px;
     font-size: 20px;
+    height: 20px;
+    width: 20px;
+    text-align: center;
 }
 
-.this_page {
+.page p {
     font-weight: bold;
 }
