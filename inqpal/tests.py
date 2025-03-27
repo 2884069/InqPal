@@ -347,3 +347,19 @@ class DisplayPostTests(TestCase):
         response = self.client.get(reverse('inqpal:trending'))
         self.assertTrue(b"test post 123" in response.content)
         self.assertTrue(b"test comment 123" in response.content)
+
+class DisplayCategoryTests(TestCase):
+    def make_category(self):
+        image = "chernobylFox.jpg"
+        test_category = Category.objects.get_or_create(name='test_category',description='test_desc',picture=image)[0]
+        test_category.save()
+        return test_category
+    
+    def test_display_error_no_categories(self):
+        response = self.client.get(reverse('inqpal:categories'))
+        self.assertTrue(b"Error: No categories to show!" in response.content)
+
+    def test_display_categories(self):
+        self.make_category()
+        response = self.client.get(reverse('inqpal:categories'))
+        self.assertTrue(b"test_category" in response.content)
