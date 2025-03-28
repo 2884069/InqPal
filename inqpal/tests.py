@@ -358,6 +358,11 @@ class DisplayPostTests(TestCase):
         self.account = Account.objects.create(user=self.user, fav_dino='T-Rex')
         self.client.login(username='testuser', password='TestPassword123')
 
+    def make_other_account(self):
+        other_user = User.objects.create_user(username='testuser2', email='test2@example.com', password='TestPassword321')
+        other_account = Account.objects.create(user=other_user, fav_dino='T-Rex')
+        return other_account
+
     def make_category(self):
         image = "chernobylFox.jpg"
         test_category = Category.objects.get_or_create(name='test_category',description='test_desc',picture=image)[0]
@@ -420,11 +425,32 @@ class DisplayPostTests(TestCase):
         response = self.client.get(reverse('inqpal:trending'))
         self.assertTrue(b"roar_form" in response.content)
 
+    def test_unroar_button_when_roared(self):
+        post = self.make_post()
+        post.roars.add(self.account)
+        response = self.client.get(reverse('inqpal:trending'))
+        self.assertTrue(b"unroar_form" in response.content)
+
     def test_no_roar_button_no_account(self):
         self.make_post()
         self.client.logout()
         response = self.client.get(reverse('inqpal:trending'))
         self.assertFalse(b"roar_form" in response.content)
+
+    def test_delete_button_your_comment(self):
+        post = self.make_post()
+        comment = Comment.objects.get_or_create(post=post,text='test comment 123',creator=self.account)[0]
+        comment.save()
+        response = self.client.get(reverse('inqpal:trending'))
+        self.assertTrue(b"delete_comment" in response.content)
+
+    def test_delete_button_your_comment(self):
+        post = self.make_post()
+        otherAccount = self.make_other_account()
+        comment = Comment.objects.get_or_create(post=post,text='test comment 123',creator=otherAccount)[0]
+        comment.save()
+        response = self.client.get(reverse('inqpal:trending'))
+        self.assertFalse(b"delete_comment" in response.content)
 
     def test_display_error_no_posts(self):
         response = self.client.get(reverse('inqpal:trending'))
